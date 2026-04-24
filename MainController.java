@@ -22,14 +22,14 @@ public class MainController {
         // Pagine
         MainPage mainPage = new MainPage(this);
         CreditPage creditPage = new CreditPage(this);
-        TeamBuilderPage teamBuilder = new TeamBuilderPage(this);
-        PlayPage playPage = new PlayPage(this);
+        //TeamBuilderPage teamBuilder = new TeamBuilderPage(this);
+        //PlayPage playPage = new PlayPage(this);
         //ShowTeamPage showTeam = new ShowTeamPage(this);
 
         container.add(mainPage, "main");
         container.add(creditPage, "credit");
-        container.add(teamBuilder, "team");
-        container.add(playPage, "play");
+        //container.add(teamBuilder, "team");
+        //container.add(playPage, "play");
         //container.add(showTeam, "showteam");
 
         frame.add(container);
