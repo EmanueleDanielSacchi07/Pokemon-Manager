@@ -9,6 +9,7 @@ public class MainController {
     private JPanel container;
     private CardLayout layout;
     private JButton bul;
+    private JButton sbur;
 
     public MainController() {
 
