@@ -8,6 +8,7 @@ public class MainController {
     private JFrame frame;
     private JPanel container;
     private CardLayout layout;
+    private JButton bul;
 
     public MainController() {
 
