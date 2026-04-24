@@ -1,0 +1,165 @@
+abiss;180;5;30;terra;fisica
+absorb;20;25;100;erba;speciale
+acid;40;30;100;veleno;speciale
+acid armor;0;20;100;veleno;stato
+agility;0;30;100;psico;stato
+amnesia;0;20;100;psico;stato
+aurora beam;65;20;100;ghiaccio;speciale
+barrage;15;20;85;normale;fisica
+barrier;0;20;100;psico;stato
+bide;0;10;100;normale;fisica
+bind;15;20;85;normale;fisica
+bite;60;25;100;buio;fisica
+blizzard;110;5;70;ghiaccio;speciale
+body slam;85;15;100;normale;fisica
+bone club;65;20;85;terra;fisica
+bonemerang;50;10;90;terra;fisica
+bubble;40;30;100;acqua;speciale
+bubble beam;65;20;100;acqua;speciale
+clamp;35;10;85;acqua;fisica
+comet punch;18;15;85;normale;fisica
+confuse ray;0;10;100;spettro;stato
+confusion;50;25;100;psico;speciale
+constrict;10;35;100;normale;fisica
+conversion;0;30;100;normale;stato
+counter;0;20;100;lotta;fisica
+crabhammer;100;10;90;acqua;fisica
+cut;50;30;95;normale;fisica
+defense curl;0;40;100;normale;stato
+dig;80;10;100;terra;fisica
+disable;0;20;100;normale;stato
+dizzy punch;70;10;100;normale;fisica
+double kick;30;30;100;lotta;fisica
+double slap;15;10;85;normale;fisica
+double team;0;15;100;normale;stato
+double edge;120;15;100;normale;fisica
+dragon rage;0;10;100;drago;speciale
+dream eater;100;15;100;psico;speciale
+drill peck;80;20;100;volante;fisica
+earthquake;100;10;100;terra;fisica
+egg bomb;100;10;75;normale;fisica
+ember;40;25;100;fuoco;speciale
+explosion;250;5;100;normale;fisica
+fire blast;110;5;85;fuoco;speciale
+fire punch;75;15;100;fuoco;fisica
+fissure;0;5;30;terra;fisica
+flamethrower;90;15;100;fuoco;speciale
+flash;0;20;100;normale;stato
+fly;90;15;95;volante;fisica
+focus energy;0;30;100;normale;stato
+fury attack;15;20;85;normale;fisica
+fury swipes;18;15;80;normale;fisica
+glare;0;30;100;normale;stato
+growl;0;40;100;normale;stato
+growth;0;40;100;normale;stato
+guillotine;0;5;30;normale;fisica
+gust;40;35;100;volante;speciale
+harden;0;30;100;normale;stato
+haze;0;30;100;ghiaccio;stato
+headbutt;70;15;100;normale;fisica
+high jump kick;130;10;90;lotta;fisica
+horn attack;65;25;100;normale;fisica
+horn drill;0;5;30;normale;fisica
+hydro pump;110;5;80;acqua;speciale
+hyper beam;150;5;90;normale;speciale
+hyper fang;80;15;90;normale;fisica
+hypnosis;0;20;60;psico;stato
+ice beam;90;10;100;ghiaccio;speciale
+ice punch;75;15;100;ghiaccio;fisica
+jump kick;100;10;95;lotta;fisica
+karate chop;50;25;100;lotta;fisica
+kinesis;0;15;80;psico;stato
+leech life;20;15;100;coleottero;fisica
+leech seed;0;10;90;erba;stato
+leer;0;30;100;normale;stato
+lick;30;30;100;spettro;fisica
+light screen;0;30;100;psico;stato
+lovely kiss;0;10;75;normale;stato
+low kick;50;20;90;lotta;fisica
+meditate;0;40;100;psico;stato
+mega drain;40;15;100;erba;speciale
+mega kick;120;5;75;normale;fisica
+mega punch;80;20;85;normale;fisica
+metronome;0;10;100;normale;stato
+mimic;0;10;100;normale;stato
+minimize;0;10;100;normale;stato
+mirror move;0;20;100;volante;stato
+mist;0;30;100;ghiaccio;stato
+night shade;0;15;100;spettro;speciale
+pay day;40;20;100;normale;fisica
+peck;35;35;100;volante;fisica
+petal dance;120;10;100;erba;speciale
+pin missile;25;20;95;coleottero;fisica
+poison gas;0;40;90;veleno;stato
+poison powder;0;35;75;veleno;stato
+poison sting;15;35;100;veleno;fisica
+pound;40;35;100;normale;fisica
+psybeam;65;20;100;psico;speciale
+psychic;90;10;100;psico;speciale
+psywave;0;15;100;psico;speciale
+quick attack;40;30;100;normale;fisica
+rage;20;20;100;normale;fisica
+razor leaf;55;25;95;erba;fisica
+razor wind;80;10;100;normale;speciale
+recover;0;10;100;normale;stato
+reflect;0;20;100;psico;stato
+rest;0;10;100;psico;stato
+roar;0;20;100;normale;stato
+rock slide;75;10;90;roccia;fisica
+rock throw;50;15;90;roccia;fisica
+rolling kick;60;15;85;lotta;fisica
+sand attack;0;15;100;terra;stato
+scratch;40;35;100;normale;fisica
+screech;0;40;85;normale;stato
+seismic toss;0;20;100;lotta;fisica
+self destruct;200;5;100;normale;fisica
+sharpen;0;30;100;normale;stato
+sing;0;15;55;normale;stato
+skull bash;130;10;100;normale;fisica
+sky attack;140;5;90;volante;fisica
+slam;80;20;75;normale;fisica
+slash;70;20;100;normale;fisica
+sleep powder;0;15;75;erba;stato
+sludge;65;20;100;veleno;speciale
+smog;30;20;70;veleno;speciale
+smokescreen;0;20;100;normale;stato
+soft boiled;0;10;100;normale;stato
+solar beam;120;10;100;erba;speciale
+sonic boom;0;20;90;normale;speciale
+spike cannon;20;15;100;normale;fisica
+splash;0;40;100;normale;stato
+spore;0;15;100;erba;stato
+stomp;65;20;100;normale;fisica
+strength;80;15;100;normale;fisica
+string shot;0;40;95;coleottero;stato
+struggle;50;1;100;normale;fisica
+stun spore;0;30;75;erba;stato
+submission;80;20;80;lotta;fisica
+substitute;0;10;100;normale;stato
+super fang;0;10;90;normale;fisica
+supersonic;0;20;55;normale;stato
+surf;90;15;100;acqua;speciale
+swift;60;20;—;normale;speciale
+swords dance;0;20;100;normale;stato
+tackle;40;35;100;normale;fisica
+tail whip;0;30;100;normale;stato
+take down;90;20;85;normale;fisica
+teleport;0;20;100;psico;stato
+thrash;120;10;100;normale;fisica
+thunder;110;10;70;elettro;speciale
+thunder punch;75;15;100;elettro;fisica
+thunder shock;40;30;100;elettro;speciale
+thunder wave;0;20;90;elettro;stato
+thunderbolt;90;15;100;elettro;speciale
+toxic;0;10;90;veleno;stato
+transform;0;10;100;normale;stato
+tri attack;80;10;100;normale;speciale
+twineedle;25;20;100;coleottero;fisica
+vice grip;55;30;100;normale;fisica
+vine whip;45;25;100;erba;fisica
+water gun;40;25;100;acqua;speciale
+waterfall;80;15;100;acqua;fisica
+whirlwind;0;20;100;normale;stato
+wing attack;60;35;100;volante;fisica
+withdraw;0;40;100;acqua;stato
+wrap;15;20;90;normale;fisica
