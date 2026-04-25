@@ -53,7 +53,8 @@ public class Pokedex {
                     tipi.add(tipo2);
                 }
                 // Nuovo pokemon letto
-                String imagePath = "resources/pokemon/" + nome + ".png";
+                String pokemonNum = String.format("%03d", i + 1);
+                String imagePath = "resources/pokemon/Artwork0" + pokemonNum + "_RB.png";
                 kanto[i] = new Pokemon(nome, bst, tipi, imagePath);
                 // Incremento l'array
                 i++;
