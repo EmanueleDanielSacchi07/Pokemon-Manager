@@ -1,19 +1,68 @@
-import java.awt.GridLayout;
-
+import java.awt.*;
+import javax.swing.border.*;
 import javax.swing.*;
 
 public class TeamBuilderPage extends JPanel {
-    JComboBox cbxSelezPokemon;
+    JComboBox<String> cbxSelezPokemon;
     JTextField txtNome, txtIVhp, txtIVatk, txtIVspatk, txtIVdef, txtIVspdef, txtIVspeed;
     JTextField txtEVhp, txtEVatk, txtEVspatk, txtEVdef, txtEVspdef, txtEVspeed;
 
-    JComboBox[] cbxMosse;
-    JComboBox cbxNatura;
+    JComboBox<String> cbxMosse;
+    JComboBox<String> cbxNatura;
 
-    JButton btnAggiungi;
+    JButton btnAggiungi, btnIndietro;
     JRadioButton btnSelezTeam;
 
-    TeamBuilderPage(){
+    JPanel pnl1, pnl2, pnl3, pnl4, pnl5, pnl6;
+
+    JLabel lblPokemon;
+
+    TeamBuilderPage(MainController controller){
         this.setLayout(new GridLayout(6,1));
+
+        pnl1 = new JPanel(new BorderLayout(10, 10));
+        pnl1.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        pnl2 = new JPanel();
+        pnl3 = new JPanel();
+        pnl4 = new JPanel();
+        pnl5 = new JPanel();
+        pnl6 = new JPanel();
+
+        // --- WEST: immagine pokemon ---
+        lblPokemon = new JLabel();
+        lblPokemon.setPreferredSize(new Dimension(120, 120));
+        lblPokemon.setHorizontalAlignment(SwingConstants.CENTER);
+        pnl1.add(lblPokemon, BorderLayout.WEST);
+
+        // --- CENTER: combobox + soprannome ---
+        JPanel pnlCentro = new JPanel(new GridLayout(2, 1, 5, 5));
+
+        cbxSelezPokemon = new JComboBox<>();
+        Pokedex pkDex = new Pokedex();
+        pkDex.readFromPokedexFile();
+        for(int i = 0; i < pkDex.kanto.length; i++) {
+            cbxSelezPokemon.addItem(pkDex.kanto[i].nome);
+        }
+        cbxSelezPokemon.setBorder(new TitledBorder("Seleziona Pokemon:"));
+        cbxSelezPokemon.setFont(new Font("Arial", Font.PLAIN, 14));
+        cbxSelezPokemon.addActionListener(new PokemonImageListener(pkDex, lblPokemon));
+        pnlCentro.add(cbxSelezPokemon);
+
+        txtNome = new JTextField();
+        txtNome.setBorder(new TitledBorder("Soprannome:"));
+        txtNome.setFont(new Font("Arial", Font.PLAIN, 14));
+        pnlCentro.add(txtNome);
+
+        pnl1.add(pnlCentro, BorderLayout.CENTER);
+
+        // --- EAST: bottone indietro ---
+        btnIndietro = new JButton("Indietro");
+        btnIndietro.addActionListener(new PageSwitchListener(controller, "main"));
+        pnl1.add(btnIndietro, BorderLayout.EAST);
+
+        this.add(pnl1);
+
+        // Carica immagine del primo pokemon subito
+        cbxSelezPokemon.setSelectedIndex(0);
     }
 }

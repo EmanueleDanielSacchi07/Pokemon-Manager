@@ -3,18 +3,18 @@ import java.util.*;
 public class Pokemon {
 
     // Pokemon
-    private String nome;
-    private String nomePersonale;
-    private ArrayList<Tipo> tipi; // max 2 tipi
+    String nome;
+    String nomePersonale;
+    ArrayList<Tipo> tipi; // max 2 tipi
     String immagine;
 
     // Statistiche
-    private int livello;
-    private Ev ev;
-    private Iv iv;
-    private ArrayList<Mossa> mosse; // max 4 mosse
-    private BaseStats bst;
-    private Natura natura;
+    int livello;
+    Ev ev;
+    Iv iv;
+    ArrayList<Mossa> mosse; // max 4 mosse
+    BaseStats bst;
+    Natura natura;
 
     public Pokemon(String nome, String nomePersonale, ArrayList<Tipo> tipi, int livello,
                    Ev ev, Iv iv, ArrayList<Mossa> mosse, BaseStats bst, Natura natura, String immagine) {

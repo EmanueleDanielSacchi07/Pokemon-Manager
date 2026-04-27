@@ -2,7 +2,7 @@ import java.awt.*;
 import javax.swing.*;
 
 public class SelectTeamPage extends JPanel{
-    JComboBox cbxTeam1, cbxTeam2;
+    JComboBox<String> cbxTeam1, cbxTeam2;
     JButton btnPlay, btnIndietro;
     JPanel pnlMid;
 
