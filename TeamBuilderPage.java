@@ -68,7 +68,7 @@ public class TeamBuilderPage extends JPanel {
         cbxSelezPokemon.setSelectedIndex(0);
 
         //  ---PANEL 2--- (Ev textField)
-        
+
         pnl2 = new JPanel(new GridLayout(1, 6, 5 ,5));
 
         txtEVhp = new JTextField();
@@ -103,26 +103,38 @@ public class TeamBuilderPage extends JPanel {
 
         txtIVhp = new JTextField();
         txtIVhp.setBorder(new TitledBorder("Iv Hp:"));
+        txtIVhp.setDocument(new IVDocument());
+        txtIVhp.setText("31");
         pnl3.add(txtIVhp);
 
         txtIVatk = new JTextField();
         txtIVatk.setBorder(new TitledBorder("Iv Atk:"));
+        txtIVatk.setDocument(new IVDocument());
+        txtIVatk.setText("31");
         pnl3.add(txtIVatk);
 
         txtIVspatk = new JTextField();
         txtIVspatk.setBorder(new TitledBorder("Iv Special Atk:"));
+        txtIVspatk.setDocument(new IVDocument());
+        txtIVspatk.setText("31");
         pnl3.add(txtIVspatk);
 
         txtIVdef = new JTextField();
         txtIVdef.setBorder(new TitledBorder("Iv Def:"));
+        txtIVdef.setDocument(new IVDocument());
+        txtIVdef.setText("31");
         pnl3.add(txtIVdef);
 
         txtIVspdef = new JTextField();
         txtIVspdef.setBorder(new TitledBorder("Iv Special Def:"));
+        txtIVspdef.setDocument(new IVDocument());
+        txtIVspdef.setText("31");
         pnl3.add(txtIVspdef);
         
         txtIVspeed = new JTextField();
         txtIVspeed.setBorder(new TitledBorder("Iv Speed:"));
+        txtIVspeed.setDocument(new IVDocument());
+        txtIVspeed.setText("31");
         pnl3.add(txtIVspeed);
         
         this.add(pnl3);
