@@ -28,6 +28,8 @@ public class TeamBuilderPage extends JPanel {
         pnl5 = new JPanel();
         pnl6 = new JPanel();
 
+        //  ---PANEL 1---
+
         // --- WEST: immagine pokemon ---
         lblPokemon = new JLabel();
         lblPokemon.setPreferredSize(new Dimension(120, 120));
@@ -35,7 +37,7 @@ public class TeamBuilderPage extends JPanel {
         pnl1.add(lblPokemon, BorderLayout.WEST);
 
         // --- CENTER: combobox + soprannome ---
-        JPanel pnlCentro = new JPanel(new GridLayout(2, 1, 5, 5));
+        JPanel pnlCentro = new JPanel(new GridLayout(1, 2, 5, 5));
 
         cbxSelezPokemon = new JComboBox<>();
         Pokedex pkDex = new Pokedex();
@@ -64,5 +66,35 @@ public class TeamBuilderPage extends JPanel {
 
         // Carica immagine del primo pokemon subito
         cbxSelezPokemon.setSelectedIndex(0);
+
+        //  ---PANEL 2--- (Ev textField)
+        
+        pnl2 = new JPanel(new GridLayout(1, 6, 5 ,5));
+
+        txtEVhp = new JTextField();
+        txtEVhp.setBorder(new TitledBorder("Ev Hp:"));
+        pnl2.add(txtEVhp);
+
+        txtEVatk = new JTextField();
+        txtEVatk.setBorder(new TitledBorder("Ev Atk:"));
+        pnl2.add(txtEVatk);
+
+        txtEVspatk = new JTextField();
+        txtEVspatk.setBorder(new TitledBorder("Ev Special Atk:"));
+        pnl2.add(txtEVspatk);
+
+        txtEVdef = new JTextField();
+        txtEVdef.setBorder(new TitledBorder("Ev Def:"));
+        pnl2.add(txtEVdef);
+
+        txtEVspdef = new JTextField();
+        txtEVspdef.setBorder(new TitledBorder("Ev Special Def:"));
+        pnl2.add(txtEVspdef);
+        
+        txtEVspeed = new JTextField();
+        txtEVspeed.setBorder(new TitledBorder("Ev Speed:"));
+        pnl2.add(txtEVspeed);
+        
+        this.add(pnl2);
     }
 }
