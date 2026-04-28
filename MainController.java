@@ -13,7 +13,7 @@ public class MainController {
 
         frame = new JFrame("Pokémon Manager");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(600, 500);
+        frame.setSize(1100, 700);
         frame.setLocationRelativeTo(null);
 
         layout = new CardLayout();

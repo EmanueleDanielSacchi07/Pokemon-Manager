@@ -96,5 +96,35 @@ public class TeamBuilderPage extends JPanel {
         pnl2.add(txtEVspeed);
         
         this.add(pnl2);
+
+        //  ---PANEL 3--- (Iv textField)
+        
+        pnl3 = new JPanel(new GridLayout(1, 6, 5 ,5));
+
+        txtIVhp = new JTextField();
+        txtIVhp.setBorder(new TitledBorder("Iv Hp:"));
+        pnl3.add(txtIVhp);
+
+        txtIVatk = new JTextField();
+        txtIVatk.setBorder(new TitledBorder("Iv Atk:"));
+        pnl3.add(txtIVatk);
+
+        txtIVspatk = new JTextField();
+        txtIVspatk.setBorder(new TitledBorder("Iv Special Atk:"));
+        pnl3.add(txtIVspatk);
+
+        txtIVdef = new JTextField();
+        txtIVdef.setBorder(new TitledBorder("Iv Def:"));
+        pnl3.add(txtIVdef);
+
+        txtIVspdef = new JTextField();
+        txtIVspdef.setBorder(new TitledBorder("Iv Special Def:"));
+        pnl3.add(txtIVspdef);
+        
+        txtIVspeed = new JTextField();
+        txtIVspeed.setBorder(new TitledBorder("Iv Speed:"));
+        pnl3.add(txtIVspeed);
+        
+        this.add(pnl3);
     }
 }
