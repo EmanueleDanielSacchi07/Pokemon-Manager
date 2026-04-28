@@ -23,7 +23,9 @@ public class TeamBuilderPage extends JPanel {
         pnl1 = new JPanel(new BorderLayout(10, 10));
         pnl1.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         pnl2 = new JPanel();
+        pnl2.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         pnl3 = new JPanel();
+        pnl3.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         pnl4 = new JPanel();
         pnl5 = new JPanel();
         pnl6 = new JPanel();
