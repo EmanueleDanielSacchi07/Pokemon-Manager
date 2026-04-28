@@ -27,8 +27,7 @@ public class Mosse {
             fr = new FileReader("mosse.csv");
             br = new BufferedReader(fr);
 
-            while(s != null) {
-                s = br.readLine();
+            while((s = br.readLine()) != null) {
                 st = new StringTokenizer(s, ";");
 
                 nome = st.nextToken();

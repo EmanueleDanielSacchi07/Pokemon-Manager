@@ -139,7 +139,7 @@ substitute;0;10;100;normale;stato
 super fang;0;10;90;normale;fisica
 supersonic;0;20;55;normale;stato
 surf;90;15;100;acqua;speciale
-swift;60;20;—;normale;speciale
+swift;60;20;100;normale;speciale
 swords dance;0;20;100;normale;stato
 tackle;40;35;100;normale;fisica
 tail whip;0;30;100;normale;stato
