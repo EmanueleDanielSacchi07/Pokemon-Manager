@@ -1,5 +1,3 @@
-import java.io.*;
-
 public class Team {
     Pokemon []pokemons;
     String nome;
