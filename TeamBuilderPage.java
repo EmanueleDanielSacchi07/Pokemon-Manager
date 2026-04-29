@@ -77,27 +77,34 @@ public class TeamBuilderPage extends JPanel {
 
         pnl2 = new JPanel(new GridLayout(1, 6, 5 ,5));
 
-        txtEVhp = new JTextField();
+        txtEVhp    = new JTextField("0");
+        txtEVatk   = new JTextField("0");
+        txtEVspatk = new JTextField("0");
+        txtEVdef   = new JTextField("0");
+        txtEVspdef = new JTextField("0");
+        txtEVspeed = new JTextField("0");
+        JTextField[] evFields = {txtEVhp, txtEVatk, txtEVspatk, txtEVdef, txtEVspdef, txtEVspeed};
+        for (JTextField field : evFields) {
+            EVDocument doc = new EVDocument(evFields);
+            field.setDocument(doc);
+            field.setText("0"); // usa setText invece di insertString direttamente
+        }
+
         txtEVhp.setBorder(new TitledBorder("Ev Hp:"));
         pnl2.add(txtEVhp);
 
-        txtEVatk = new JTextField();
         txtEVatk.setBorder(new TitledBorder("Ev Atk:"));
         pnl2.add(txtEVatk);
 
-        txtEVspatk = new JTextField();
         txtEVspatk.setBorder(new TitledBorder("Ev Special Atk:"));
         pnl2.add(txtEVspatk);
 
-        txtEVdef = new JTextField();
         txtEVdef.setBorder(new TitledBorder("Ev Def:"));
         pnl2.add(txtEVdef);
 
-        txtEVspdef = new JTextField();
         txtEVspdef.setBorder(new TitledBorder("Ev Special Def:"));
         pnl2.add(txtEVspdef);
         
-        txtEVspeed = new JTextField();
         txtEVspeed.setBorder(new TitledBorder("Ev Speed:"));
         pnl2.add(txtEVspeed);
         
