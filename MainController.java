@@ -12,6 +12,7 @@ public class MainController {
     public MainController() {
 
         frame = new JFrame("Pokémon Manager");
+        frame.setIconImage(new ImageIcon("resouces/logo.png").getImage());
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(1100, 700);
         frame.setLocationRelativeTo(null);
@@ -23,12 +24,14 @@ public class MainController {
         MainPage mainPage = new MainPage(this);
         CreditPage creditPage = new CreditPage(this);
         TeamBuilderPage teamBuilder = new TeamBuilderPage(this);
+        SelectTeamPage selectTeamPage = new SelectTeamPage(this);
         //PlayPage playPage = new PlayPage(this);
         //ShowTeamPage showTeam = new ShowTeamPage(this);
 
         container.add(mainPage, "main");
         container.add(creditPage, "credit");
         container.add(teamBuilder, "team");
+        container.add(selectTeamPage, "select");
         //container.add(playPage, "play");
         //container.add(showTeam, "showteam");
 
