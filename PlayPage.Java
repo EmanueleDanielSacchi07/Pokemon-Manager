@@ -21,7 +21,7 @@ public class PlayPage extends JPanel {
     JLabel lblHpT2, lblPokemonT2;
 
     // Centro
-    JButton btnGiocaTurno;
+    JButton btnGiocaTurno, btnFinisciBattaglia;
     JTextArea txtLog;
 
     // Stato battaglia
@@ -141,12 +141,26 @@ public class PlayPage extends JPanel {
         pnlCentro.setBackground(BG_DARK);
         pnlCentro.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
+        JPanel pnlPulsanti = new JPanel(new GridLayout(2, 1, 5, 5));
+        pnlPulsanti.setBackground(BG_DARK);
+        pnlPulsanti.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
         btnGiocaTurno = creaBottone("Gioca Turno", ACCENT_YELLOW);
         btnGiocaTurno.setForeground(BG_DARK);
         btnGiocaTurno.setFont(new Font("Arial", Font.BOLD, 16));
         btnGiocaTurno.setPreferredSize(new Dimension(150, 50));
         btnGiocaTurno.addActionListener(e -> giocaTurno());
-        pnlCentro.add(btnGiocaTurno, BorderLayout.NORTH);
+
+        btnFinisciBattaglia = creaBottone("Fine", ACCENT_YELLOW);
+        btnFinisciBattaglia.setForeground(BG_DARK);
+        btnFinisciBattaglia.setFont(new Font("Arial", Font.BOLD, 16));
+        btnFinisciBattaglia.setEnabled(false);
+        btnFinisciBattaglia.setPreferredSize(new Dimension(150, 50));
+        btnFinisciBattaglia.addActionListener(new PageSwitchListener(controller, "main"));
+
+        pnlPulsanti.add(btnFinisciBattaglia);
+        pnlPulsanti.add(btnGiocaTurno);
+        pnlCentro.add(pnlPulsanti, BorderLayout.NORTH);
 
         txtLog = new JTextArea();
         txtLog.setEditable(false);
@@ -252,6 +266,7 @@ public class PlayPage extends JPanel {
             }
             appendLog("🏆 Team 1 ha vinto la battaglia!");
             btnGiocaTurno.setEnabled(false);
+            btnFinisciBattaglia.setEnabled(true);
             battersiFinita = true;
         }
     }
