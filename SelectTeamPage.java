@@ -5,6 +5,7 @@ public class SelectTeamPage extends JPanel {
     JComboBox<String> cbxTeam1, cbxTeam2;
     JButton btnPlay, btnIndietro;
     JPanel pnlMid, pnlCenter;
+    Teams teams;
 
     static final Color BG_DARK       = new Color(30, 30, 40);
     static final Color BG_PANEL      = new Color(45, 45, 60);
@@ -23,9 +24,12 @@ public class SelectTeamPage extends JPanel {
         lblTitolo.setHorizontalAlignment(SwingConstants.CENTER);
 
         // --- Caricamento team ---
-        Teams teams = new Teams();
+        teams = new Teams();
+        Mosse mosseList = new Mosse();
+        mosseList.readFromMosseFile();
+        teams = new Teams();
         for (int i = 0; i < 6; i++) {
-            teams.readPokemonFromFile(i);
+            teams.readPokemonFromFile(i, mosseList);
         }
 
         // --- ComboBox ---
@@ -36,7 +40,7 @@ public class SelectTeamPage extends JPanel {
         btnIndietro = creaBottone("Indietro");
         btnPlay     = creaBottone("Gioca");
         btnIndietro.addActionListener(new PageSwitchListener(controller, "main"));
-        btnPlay.addActionListener(new PageSwitchListener(controller, "play"));
+        btnPlay.addActionListener(new PlayListener(controller, cbxTeam1, cbxTeam2, teams));
 
         pnlMid = new JPanel(new GridLayout(2, 1, 5, 5));
         pnlMid.setBackground(BG_DARK);

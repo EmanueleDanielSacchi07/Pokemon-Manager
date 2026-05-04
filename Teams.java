@@ -11,7 +11,6 @@ public class Teams {
     }
 
     boolean writePokemonOnFile(Pokemon p, int teamIndex) {
-
         boolean thereIsSpace = teams[teamIndex].newPokemon(p);
         if (!thereIsSpace) return false;
 
@@ -19,7 +18,7 @@ public class Teams {
         String fileName = "teams/Team" + (teamIndex + 1) + ".csv";
 
         try (PrintWriter pw = new PrintWriter(new FileWriter(fileName, true))) {
-            pw.println(p.toStringCsv());
+            pw.println(p.toStringCsv()); 
             return true;
         } catch (IOException e) {
             System.out.println(e);
@@ -27,7 +26,7 @@ public class Teams {
         }
     }
 
-    boolean readPokemonFromFile(int teamIndex) {
+    boolean readPokemonFromFile(int teamIndex, Mosse mosseList) {
         String fileName = "teams/Team" + (teamIndex + 1) + ".csv";
 
         try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
@@ -36,77 +35,71 @@ public class Teams {
             while ((riga = br.readLine()) != null) {
                 StringTokenizer st = new StringTokenizer(riga, ";");
 
-                // --- Nome ---
-                String nome = st.nextToken();
-
-                // --- Soprannome ---
+                String nome         = st.nextToken();
                 String nomePersonale = st.nextToken();
                 if (nomePersonale.equals("null")) nomePersonale = null;
 
-                // --- Tipi ---
+                String strTipo1 = st.nextToken();
+                String strTipo2 = st.nextToken();
                 ArrayList<Tipo> tipi = new ArrayList<>();
-                StringTokenizer stTipi = new StringTokenizer(st.nextToken(), ",");
-                String strTipo1 = stTipi.nextToken();
                 if (!strTipo1.equals("null")) tipi.add(new Tipo(strTipo1));
-                String strTipo2 = stTipi.nextToken();
                 if (!strTipo2.equals("null")) tipi.add(new Tipo(strTipo2));
 
-                // --- Livello ---
                 int livello = Integer.parseInt(st.nextToken());
 
-                // --- IV ---
-                StringTokenizer stIv = new StringTokenizer(st.nextToken(), ",");
                 Iv iv = new Iv(
-                    Double.parseDouble(stIv.nextToken()),
-                    Double.parseDouble(stIv.nextToken()),
-                    Double.parseDouble(stIv.nextToken()),
-                    Double.parseDouble(stIv.nextToken()),
-                    Double.parseDouble(stIv.nextToken()),
-                    Double.parseDouble(stIv.nextToken())
+                    Double.parseDouble(st.nextToken()),
+                    Double.parseDouble(st.nextToken()),
+                    Double.parseDouble(st.nextToken()),
+                    Double.parseDouble(st.nextToken()),
+                    Double.parseDouble(st.nextToken()),
+                    Double.parseDouble(st.nextToken())
                 );
 
-                // --- EV ---
-                StringTokenizer stEv = new StringTokenizer(st.nextToken(), ",");
                 Ev ev = new Ev(
-                    Double.parseDouble(stEv.nextToken()),
-                    Double.parseDouble(stEv.nextToken()),
-                    Double.parseDouble(stEv.nextToken()),
-                    Double.parseDouble(stEv.nextToken()),
-                    Double.parseDouble(stEv.nextToken()),
-                    Double.parseDouble(stEv.nextToken())
+                    Double.parseDouble(st.nextToken()),
+                    Double.parseDouble(st.nextToken()),
+                    Double.parseDouble(st.nextToken()),
+                    Double.parseDouble(st.nextToken()),
+                    Double.parseDouble(st.nextToken()),
+                    Double.parseDouble(st.nextToken())
                 );
 
-                // --- Mosse ---
                 ArrayList<Mossa> mosse = new ArrayList<>();
-                StringTokenizer stMosse = new StringTokenizer(st.nextToken(), ",");
-                while (stMosse.hasMoreTokens()) {
-                    String nomeMossa = stMosse.nextToken().trim();
+                String[] nomeMosse = {st.nextToken(), st.nextToken(), st.nextToken(), st.nextToken()};
+                for (String nomeMossa : nomeMosse) {
                     if (!nomeMossa.equals("null")) {
-                        mosse.add(new Mossa(nomeMossa, 0, 0, 0, null, ""));
+                        Mossa trovata = null;
+                        for (Mossa m : mosseList.mosse) {
+                            if (m != null && m.nome.equals(nomeMossa)) {
+                                trovata = m;
+                                break;
+                            }
+                        }
+                        if (trovata != null) {
+                            mosse.add(trovata);
+                        } else {
+                            System.out.println("Mossa non trovata: " + nomeMossa);
+                        }
                     }
                 }
 
-                // --- BST ---
-                StringTokenizer stBst = new StringTokenizer(st.nextToken(), ",");
                 BaseStats bst = new BaseStats();
-                bst.bstHp     = Integer.parseInt(stBst.nextToken());
-                bst.bstAtk    = Integer.parseInt(stBst.nextToken());
-                bst.bstSpaAtk = Integer.parseInt(stBst.nextToken());
-                bst.bstDef    = Integer.parseInt(stBst.nextToken());
-                bst.bstSpaDef = Integer.parseInt(stBst.nextToken());
-                bst.bstSpeed  = Integer.parseInt(stBst.nextToken());
+                bst.bstHp     = Integer.parseInt(st.nextToken());
+                bst.bstAtk    = Integer.parseInt(st.nextToken());
+                bst.bstSpaAtk = Integer.parseInt(st.nextToken());
+                bst.bstDef    = Integer.parseInt(st.nextToken());
+                bst.bstSpaDef = Integer.parseInt(st.nextToken());
+                bst.bstSpeed  = Integer.parseInt(st.nextToken());
 
-                // --- Natura ---
                 String nomeNatura = st.nextToken();
                 Natura natura = null;
                 if (!nomeNatura.equals("null")) {
-                    natura = new Natura(nomeNatura, 1, 1, 1, 1, 1); // moltiplicatori neutri di default
+                    natura = new Natura(nomeNatura, 1, 1, 1, 1, 1);
                 }
 
-                // --- Immagine ---
                 String immagine = st.nextToken();
 
-                // --- Crea e aggiungi il pokemon al team ---
                 Pokemon p = new Pokemon(nome, nomePersonale, tipi, livello, ev, iv, mosse, bst, natura, immagine);
                 teams[teamIndex].newPokemon(p);
                 teams[teamIndex].countPokemon++;

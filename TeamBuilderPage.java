@@ -175,10 +175,12 @@ public class TeamBuilderPage extends JPanel {
     }
 
     private JButton creaBottone(String testo) {
+        Dimension buttonSize = new Dimension(200, 50);
         JButton btn = new JButton(testo);
+        btn.setPreferredSize(buttonSize);
         btn.setBackground(ACCENT_RED);
         btn.setForeground(TEXT_WHITE);
-        btn.setFont(new Font("Arial", Font.BOLD, 14));
+        btn.setFont(new Font("Arial", Font.BOLD, 16));
         btn.setFocusPainted(false);
         btn.setBorderPainted(false);
         return btn;

@@ -60,33 +60,28 @@ public class Pokemon {
     }
 
     public String toStringCsv() {
-        // Soprannome
         String strNomePersonale = (nomePersonale != null && !nomePersonale.isBlank()) ? nomePersonale : "null";
 
-        // Tipi — sempre 2 slot
         String tipo1 = tipi.size() > 0 ? tipi.get(0).getNome() : "null";
         String tipo2 = tipi.size() > 1 ? tipi.get(1).getNome() : "null";
-        String strTipi = tipo1 + "," + tipo2;
 
-        // Mosse — sempre 4 slot
-        StringBuilder strMosse = new StringBuilder();
-        for (int i = 0; i < 4; i++) {
-            if (i < mosse.size() && mosse.get(i) != null) {
-                strMosse.append(mosse.get(i).nome);
-            } else {
-                strMosse.append("null");
-            }
-            if (i < 3) strMosse.append(",");
-        }
+        String mossa1 = mosse.size() > 0 && mosse.get(0) != null ? mosse.get(0).nome : "null";
+        String mossa2 = mosse.size() > 1 && mosse.get(1) != null ? mosse.get(1).nome : "null";
+        String mossa3 = mosse.size() > 2 && mosse.get(2) != null ? mosse.get(2).nome : "null";
+        String mossa4 = mosse.size() > 3 && mosse.get(3) != null ? mosse.get(3).nome : "null";
 
         return nome + ";" +
             strNomePersonale + ";" +
-            strTipi + ";" +
+            tipo1 + ";" +
+            tipo2 + ";" +
             livello + ";" +
-            iv.ivHp + "," + iv.ivAtk + "," + iv.ivSpaAtk + "," + iv.ivDef + "," + iv.ivSpaDef + "," + iv.ivSpeed + ";" +
-            ev.evHp + "," + ev.evAtk + "," + ev.evSpaAtk + "," + ev.evDef + "," + ev.evSpaDef + "," + ev.evSpeed + ";" +
-            strMosse + ";" +
-            bst.bstHp + "," + bst.bstAtk + "," + bst.bstSpaAtk + "," + bst.bstDef + "," + bst.bstSpaDef + "," + bst.bstSpeed + ";" +
+            iv.ivHp + ";" + iv.ivAtk + ";" + iv.ivSpaAtk + ";" + iv.ivDef + ";" + iv.ivSpaDef + ";" + iv.ivSpeed + ";" +
+            ev.evHp + ";" + ev.evAtk + ";" + ev.evSpaAtk + ";" + ev.evDef + ";" + ev.evSpaDef + ";" + ev.evSpeed + ";" +
+            mossa1 + ";" +
+            mossa2 + ";" +
+            mossa3 + ";" +
+            mossa4 + ";" +
+            bst.bstHp + ";" + bst.bstAtk + ";" + bst.bstSpaAtk + ";" + bst.bstDef + ";" + bst.bstSpaDef + ";" + bst.bstSpeed + ";" +
             natura.nome + ";" +
             immagine;
     }

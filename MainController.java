@@ -25,20 +25,24 @@ public class MainController {
         CreditPage creditPage = new CreditPage(this);
         TeamBuilderPage teamBuilder = new TeamBuilderPage(this);
         SelectTeamPage selectTeamPage = new SelectTeamPage(this);
-        //PlayPage playPage = new PlayPage(this);
         //ShowTeamPage showTeam = new ShowTeamPage(this);
 
         container.add(mainPage, "main");
         container.add(creditPage, "credit");
         container.add(teamBuilder, "team");
         container.add(selectTeamPage, "select");
-        //container.add(playPage, "play");
         //container.add(showTeam, "showteam");
 
         frame.add(container);
         frame.setVisible(true);
 
         layout.show(container, "main");
+    }
+
+    public void showPlayPage(Team t1, Team t2) {
+        PlayPage playPage = new PlayPage(t1, t2, this);
+        container.add(playPage, "play");
+        layout.show(container, "play");
     }
 
     public void showPage(String name) {
