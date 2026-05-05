@@ -14,7 +14,9 @@ public class MainController {
         frame = new JFrame("Pokémon Manager");
         frame.setIconImage(new ImageIcon("resouces/logo.png").getImage());
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(1920, 1080);
+
+        frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        //frame.setSize(1920, 1080);
         frame.setLocationRelativeTo(null);
 
         layout = new CardLayout();
