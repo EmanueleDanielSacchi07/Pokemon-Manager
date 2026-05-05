@@ -250,7 +250,7 @@ public class PlayPage extends JPanel {
                     return;
                 }
             }
-            appendLog("🏆 Team 2 ha vinto la battaglia!");
+            appendLog("Team 2 ha vinto la battaglia!");
             btnGiocaTurno.setEnabled(false);
             battersiFinita = true;
         } else {
@@ -264,7 +264,7 @@ public class PlayPage extends JPanel {
                     return;
                 }
             }
-            appendLog("🏆 Team 1 ha vinto la battaglia!");
+            appendLog("Team 1 ha vinto la battaglia!");
             btnGiocaTurno.setEnabled(false);
             btnFinisciBattaglia.setEnabled(true);
             battersiFinita = true;
