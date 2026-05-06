@@ -24,22 +24,31 @@ public class TeamBuilderPage extends JPanel {
     NatureList natureList;
     Teams teams;
 
-    // Colori tema
-    static final Color BG_DARK      = new Color(30, 30, 40);
-    static final Color BG_PANEL     = new Color(45, 45, 60);
-    static final Color ACCENT_RED   = new Color(220, 50, 50);
+    static final Color BG_DARK       = new Color(30, 30, 40);
+    static final Color BG_PANEL      = new Color(45, 45, 60);
+    static final Color BG_FIELD      = new Color(60, 60, 80);
+    static final Color ACCENT_RED    = new Color(220, 50, 50);
     static final Color ACCENT_YELLOW = new Color(255, 220, 50);
-    static final Color TEXT_WHITE   = Color.WHITE;
+    static final Color ACCENT_GREEN  = new Color(50, 180, 50);
+    static final Color TEXT_WHITE    = Color.WHITE;
+    static final Color TEXT_DIM      = new Color(180, 180, 200);
 
     TeamBuilderPage(MainController controller) {
-        this.setLayout(new GridLayout(5, 1));
+        this.setLayout(new GridLayout(5, 1, 0, 4));
         this.setBackground(BG_DARK);
+        this.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
 
         pnl1 = creaPanel(new BorderLayout(10, 10));
-        pnl2 = creaPanel(new GridLayout(1, 6, 5, 5));
-        pnl3 = creaPanel(new GridLayout(1, 6, 5, 5));
-        pnl4 = creaPanel(new GridLayout(1, 4, 5, 5));
-        pnl5 = creaPanel(new GridLayout(1, 8, 5, 5));
+        pnl2 = creaPanel(new GridLayout(1, 6, 6, 6));
+        pnl3 = creaPanel(new GridLayout(1, 6, 6, 6));
+        pnl4 = creaPanel(new GridLayout(1, 4, 6, 6));
+        pnl5 = creaPanel(new GridLayout(1, 8, 6, 6));
+
+        // Titolini sezione
+        aggiungiTitolo(pnl2, "EV");
+        aggiungiTitolo(pnl3, "IV");
+        aggiungiTitolo(pnl4, "MOSSE");
+        aggiungiTitolo(pnl5, "TEAM / NATURA");
 
         // --- Caricamento dati ---
         pkDex = new Pokedex();
@@ -53,9 +62,10 @@ public class TeamBuilderPage extends JPanel {
         lblPokemon = new JLabel();
         lblPokemon.setPreferredSize(new Dimension(120, 120));
         lblPokemon.setHorizontalAlignment(SwingConstants.CENTER);
+        lblPokemon.setBorder(BorderFactory.createLineBorder(ACCENT_YELLOW, 1));
         pnl1.add(lblPokemon, BorderLayout.WEST);
 
-        JPanel pnlCentro = creaPanel(new GridLayout(1, 2, 5, 5));
+        JPanel pnlCentro = creaPanel(new GridLayout(1, 2, 8, 8));
 
         cbxSelezPokemon = new JComboBox<>();
         for (int i = 0; i < pkDex.kanto.length; i++) {
@@ -69,20 +79,23 @@ public class TeamBuilderPage extends JPanel {
         pnlCentro.add(txtNome);
         pnl1.add(pnlCentro, BorderLayout.CENTER);
 
-        btnIndietro = creaBottone("Indietro");
+        JPanel pnlEast = new JPanel(new BorderLayout());
+        pnlEast.setBackground(BG_PANEL);
+        btnIndietro = creaBottone("← Indietro", ACCENT_RED);
         btnIndietro.addActionListener(new PageSwitchListener(controller, "main"));
-        pnl1.add(btnIndietro, BorderLayout.EAST);
+        pnlEast.add(btnIndietro, BorderLayout.CENTER);
+        pnl1.add(pnlEast, BorderLayout.EAST);
 
         this.add(pnl1);
         cbxSelezPokemon.setSelectedIndex(0);
 
         // ---PANEL 2--- (EV)
-        txtEVhp    = creaTxtField("Ev Hp:");
-        txtEVatk   = creaTxtField("Ev Atk:");
-        txtEVspatk = creaTxtField("Ev Special Atk:");
-        txtEVdef   = creaTxtField("Ev Def:");
-        txtEVspdef = creaTxtField("Ev Special Def:");
-        txtEVspeed = creaTxtField("Ev Speed:");
+        txtEVhp    = creaTxtField("HP");
+        txtEVatk   = creaTxtField("Atk");
+        txtEVspatk = creaTxtField("Sp.Atk");
+        txtEVdef   = creaTxtField("Def");
+        txtEVspdef = creaTxtField("Sp.Def");
+        txtEVspeed = creaTxtField("Speed");
 
         JTextField[] evFields = {txtEVhp, txtEVatk, txtEVspatk, txtEVdef, txtEVspdef, txtEVspeed};
         for (JTextField field : evFields) {
@@ -99,12 +112,12 @@ public class TeamBuilderPage extends JPanel {
         this.add(pnl2);
 
         // ---PANEL 3--- (IV)
-        txtIVhp    = creaIVField("Iv Hp:");
-        txtIVatk   = creaIVField("Iv Atk:");
-        txtIVspatk = creaIVField("Iv Special Atk:");
-        txtIVdef   = creaIVField("Iv Def:");
-        txtIVspdef = creaIVField("Iv Special Def:");
-        txtIVspeed = creaIVField("Iv Speed:");
+        txtIVhp    = creaIVField("HP");
+        txtIVatk   = creaIVField("Atk");
+        txtIVspatk = creaIVField("Sp.Atk");
+        txtIVdef   = creaIVField("Def");
+        txtIVspdef = creaIVField("Sp.Def");
+        txtIVspeed = creaIVField("Speed");
 
         pnl3.add(txtIVhp);
         pnl3.add(txtIVatk);
@@ -147,7 +160,7 @@ public class TeamBuilderPage extends JPanel {
             slotsTeam[i] = new JRadioButton("Team " + (i + 1));
             slotsTeam[i].setBackground(BG_PANEL);
             slotsTeam[i].setForeground(ACCENT_YELLOW);
-            slotsTeam[i].setFont(new Font("Arial", Font.BOLD, 13));
+            slotsTeam[i].setFont(new Font("Arial", Font.BOLD, 12));
             grpTeam.add(slotsTeam[i]);
             pnl5.add(slotsTeam[i]);
         }
@@ -158,44 +171,57 @@ public class TeamBuilderPage extends JPanel {
         for (Natura n : natureList.getAll()) cbxNatura.addItem(n.nome);
         pnl5.add(cbxNatura);
 
-        btnAggiungi = creaBottone("Aggiungi");
+        btnAggiungi = creaBottone("+ Aggiungi", ACCENT_GREEN);
         btnAggiungi.addActionListener(new AddPokemonListener(this, teams));
         pnl5.add(btnAggiungi);
 
         this.add(pnl5);
     }
 
-    // --- Metodi helper per lo stile ---
+    // --- Aggiunge un titolino colorato sopra il pannello ---
+    private void aggiungiTitolo(JPanel pnl, String testo) {
+        pnl.setBorder(BorderFactory.createTitledBorder(
+            BorderFactory.createLineBorder(ACCENT_YELLOW, 1),
+            testo,
+            TitledBorder.LEFT,
+            TitledBorder.TOP,
+            new Font("Arial", Font.BOLD, 11), ACCENT_YELLOW));
+    }
+
+    // --- Metodi helper ---
 
     private JPanel creaPanel(LayoutManager layout) {
         JPanel p = new JPanel(layout);
         p.setBackground(BG_PANEL);
-        p.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        p.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
         return p;
     }
 
-    private JButton creaBottone(String testo) {
-        Dimension buttonSize = new Dimension(200, 50);
+    private JButton creaBottone(String testo, Color colore) {
         JButton btn = new JButton(testo);
-        btn.setPreferredSize(buttonSize);
-        btn.setBackground(ACCENT_RED);
+        btn.setBackground(colore);
         btn.setForeground(TEXT_WHITE);
-        btn.setFont(new Font("Arial", Font.BOLD, 16));
+        btn.setFont(new Font("Arial", Font.BOLD, 14));
         btn.setFocusPainted(false);
         btn.setBorderPainted(false);
+        btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
         return btn;
     }
 
     private JTextField creaTxtField(String titolo) {
         JTextField txt = new JTextField();
-        txt.setBackground(new Color(60, 60, 80));
+        txt.setBackground(BG_FIELD);
         txt.setForeground(TEXT_WHITE);
         txt.setCaretColor(TEXT_WHITE);
-        txt.setFont(new Font("Arial", Font.PLAIN, 14));
+        txt.setFont(new Font("Arial", Font.PLAIN, 13));
+        txt.setHorizontalAlignment(JTextField.CENTER);
         txt.setBorder(BorderFactory.createTitledBorder(
-            BorderFactory.createLineBorder(ACCENT_YELLOW), titolo,
-            TitledBorder.LEFT, TitledBorder.TOP,
-            new Font("Arial", Font.BOLD, 11), ACCENT_YELLOW
+            BorderFactory.createLineBorder(new Color(90, 90, 120), 1),
+            titolo,
+            TitledBorder.CENTER,
+            TitledBorder.TOP,
+            new Font("Arial", Font.BOLD, 10),
+            TEXT_DIM
         ));
         return txt;
     }
@@ -208,13 +234,16 @@ public class TeamBuilderPage extends JPanel {
     }
 
     private void stilizzaCbx(JComboBox<String> cbx, String titolo) {
-        cbx.setBackground(new Color(60, 60, 80));
+        cbx.setBackground(BG_FIELD);
         cbx.setForeground(TEXT_WHITE);
-        cbx.setFont(new Font("Arial", Font.PLAIN, 14));
+        cbx.setFont(new Font("Arial", Font.PLAIN, 13));
         cbx.setBorder(BorderFactory.createTitledBorder(
-            BorderFactory.createLineBorder(ACCENT_YELLOW), titolo,
-            TitledBorder.LEFT, TitledBorder.TOP,
-            new Font("Arial", Font.BOLD, 11), ACCENT_YELLOW
+            BorderFactory.createLineBorder(ACCENT_YELLOW, 1),
+            titolo,
+            TitledBorder.LEFT,
+            TitledBorder.TOP,
+            new Font("Arial", Font.BOLD, 10),
+            ACCENT_YELLOW
         ));
     }
 

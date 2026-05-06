@@ -16,7 +16,6 @@ public class MainController {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
-        //frame.setSize(1920, 1080);
         frame.setLocationRelativeTo(null);
 
         layout = new CardLayout();
@@ -27,13 +26,13 @@ public class MainController {
         CreditPage creditPage = new CreditPage(this);
         TeamBuilderPage teamBuilder = new TeamBuilderPage(this);
         SelectTeamPage selectTeamPage = new SelectTeamPage(this);
-        //ShowTeamPage showTeam = new ShowTeamPage(this);
+        ShowTeamPage showTeam = new ShowTeamPage(this);
 
         container.add(mainPage, "main");
         container.add(creditPage, "credit");
         container.add(teamBuilder, "team");
         container.add(selectTeamPage, "select");
-        //container.add(showTeam, "showteam");
+        container.add(showTeam, "showteam");
 
         frame.add(container);
         frame.setVisible(true);
