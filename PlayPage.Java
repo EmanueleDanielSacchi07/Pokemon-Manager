@@ -211,11 +211,11 @@ public class PlayPage extends JPanel {
         PokemonInBattaglia pkT2 = squadraT2[activePokemonT2];
 
         if (!pkT1.haCambiato && !mossaSceltaT1) {
-            appendLog("⚠ Team 1 deve selezionare una mossa!");
+            appendLog("Team 1 deve selezionare una mossa!");
             return;
         }
         if (!pkT2.haCambiato && !mossaSceltaT2) {
-            appendLog("⚠ Team 2 deve selezionare una mossa!");
+            appendLog("Team 2 deve selezionare una mossa!");
             return;
         }
 
@@ -241,6 +241,7 @@ public class PlayPage extends JPanel {
     private void gestisciKo(int team) {
         if (team == 1) {
             for (int i = 0; i < 6; i++) {
+                if (i == activePokemonT1) continue; // salta quello appena sconfitto
                 if (squadraT1[i] != null && !squadraT1[i].isKo()) {
                     activePokemonT1 = i;
                     aggiornaImmagine(lblPokemonT1, squadraT1[i]);
@@ -252,9 +253,11 @@ public class PlayPage extends JPanel {
             }
             appendLog("Team 2 ha vinto la battaglia!");
             btnGiocaTurno.setEnabled(false);
+            btnFinisciBattaglia.setEnabled(true);
             battersiFinita = true;
         } else {
             for (int i = 0; i < 6; i++) {
+                if (i == activePokemonT2) continue; // salta quello appena sconfitto
                 if (squadraT2[i] != null && !squadraT2[i].isKo()) {
                     activePokemonT2 = i;
                     aggiornaImmagine(lblPokemonT2, squadraT2[i]);

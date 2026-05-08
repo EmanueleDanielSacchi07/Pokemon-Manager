@@ -65,6 +65,34 @@ public class SelectTeamPage extends JPanel {
 
         gbc.gridy = 1;
         this.add(pnlCenter, gbc);
+
+        addComponentListener(new java.awt.event.ComponentAdapter() {
+            @Override
+            public void componentShown(java.awt.event.ComponentEvent e) {
+                ricaricaTeams(controller);
+            }
+        });
+    }
+
+    private void ricaricaTeams(MainController controller) {
+        Mosse mosseList = new Mosse();
+        mosseList.readFromMosseFile();
+        teams = new Teams();
+        for (int i = 0; i < 6; i++) {
+            teams.readPokemonFromFile(i, mosseList);
+        }
+        // Aggiorna le combobox
+        cbxTeam1.removeAllItems();
+        cbxTeam2.removeAllItems();
+        for (int i = 0; i < 6; i++) {
+            cbxTeam1.addItem(teams.teams[i].nome);
+            cbxTeam2.addItem(teams.teams[i].nome);
+        }
+        // Aggiorna il listener con i nuovi team
+        for (var l : btnPlay.getActionListeners()) {
+            btnPlay.removeActionListener(l);
+        }
+        btnPlay.addActionListener(new PlayListener(controller, cbxTeam1, cbxTeam2, teams));
     }
 
     private JComboBox<String> creaCbx(Teams teams) {

@@ -66,8 +66,13 @@ public class ShowTeamPage extends JPanel {
         pnlTeam.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         this.add(pnlTeam, BorderLayout.CENTER);
 
-        // Mostra il primo team subito
-        aggiornaTeam();
+        addComponentListener(new java.awt.event.ComponentAdapter() {
+            @Override
+            public void componentShown(java.awt.event.ComponentEvent e) {
+                ricaricaTeams();
+                aggiornaTeam();
+            }
+        });
     }
 
     private void aggiornaTeam() {
@@ -82,6 +87,27 @@ public class ShowTeamPage extends JPanel {
 
         pnlTeam.revalidate();
         pnlTeam.repaint();
+    }
+
+    private void ricaricaTeams() {
+        mosseList = new Mosse();
+        mosseList.readFromMosseFile();
+        teams = new Teams();
+        for (int i = 0; i < 6; i++) {
+            teams.readPokemonFromFile(i, mosseList);
+        }
+
+        // Rimuovi il listener prima di modificare la combobox
+        var listeners = cbxTeam.getActionListeners();
+        for (var l : listeners) cbxTeam.removeActionListener(l);
+
+        cbxTeam.removeAllItems();
+        for (int i = 0; i < 6; i++) {
+            cbxTeam.addItem(teams.teams[i].nome);
+        }
+
+        // Riaggiungi il listener
+        cbxTeam.addActionListener(e -> aggiornaTeam());
     }
 
     private JPanel creaPokemonCard(Pokemon p, int slotIndex, int teamIndex) {
