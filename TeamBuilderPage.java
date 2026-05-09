@@ -24,8 +24,9 @@ public class TeamBuilderPage extends JPanel {
     NatureList natureList;
     Teams teams;
 
-    static final Color BG_DARK       = new Color(30, 30, 40);
-    static final Color BG_PANEL      = new Color(45, 45, 60);
+    Image sfondo;
+
+    static final Color BG_PANEL      = new Color(45, 45, 60, 200);
     static final Color BG_FIELD      = new Color(60, 60, 80);
     static final Color ACCENT_RED    = new Color(220, 50, 50);
     static final Color ACCENT_YELLOW = new Color(255, 220, 50);
@@ -35,8 +36,9 @@ public class TeamBuilderPage extends JPanel {
 
     TeamBuilderPage(MainController controller) {
         this.setLayout(new GridLayout(5, 1, 0, 4));
-        this.setBackground(BG_DARK);
+        this.setOpaque(false);
         this.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
+        sfondo = new ImageIcon("resouces/sfondo.png").getImage();
 
         pnl1 = creaPanel(new BorderLayout(10, 10));
         pnl2 = creaPanel(new GridLayout(1, 6, 6, 6));
@@ -44,7 +46,6 @@ public class TeamBuilderPage extends JPanel {
         pnl4 = creaPanel(new GridLayout(1, 4, 6, 6));
         pnl5 = creaPanel(new GridLayout(1, 8, 6, 6));
 
-        // Titolini sezione
         aggiungiTitolo(pnl2, "EV");
         aggiungiTitolo(pnl3, "IV");
         aggiungiTitolo(pnl4, "MOSSE");
@@ -79,8 +80,7 @@ public class TeamBuilderPage extends JPanel {
         pnlCentro.add(txtNome);
         pnl1.add(pnlCentro, BorderLayout.CENTER);
 
-        JPanel pnlEast = new JPanel(new BorderLayout());
-        pnlEast.setBackground(BG_PANEL);
+        JPanel pnlEast = creaPanel(new BorderLayout());
         btnIndietro = creaBottone("← Indietro", ACCENT_RED);
         btnIndietro.addActionListener(new PageSwitchListener(controller, "main"));
         pnlEast.add(btnIndietro, BorderLayout.CENTER);
@@ -158,7 +158,7 @@ public class TeamBuilderPage extends JPanel {
         grpTeam = new ButtonGroup();
         for (int i = 0; i < 6; i++) {
             slotsTeam[i] = new JRadioButton("Team " + (i + 1));
-            slotsTeam[i].setBackground(BG_PANEL);
+            slotsTeam[i].setOpaque(false);
             slotsTeam[i].setForeground(ACCENT_YELLOW);
             slotsTeam[i].setFont(new Font("Arial", Font.BOLD, 12));
             grpTeam.add(slotsTeam[i]);
@@ -178,7 +178,16 @@ public class TeamBuilderPage extends JPanel {
         this.add(pnl5);
     }
 
-    // --- Aggiunge un titolino colorato sopra il pannello ---
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        if (sfondo != null) {
+            g.drawImage(sfondo, 0, 0, getWidth(), getHeight(), this);
+            g.setColor(new Color(0, 0, 0, 100));
+            g.fillRect(0, 0, getWidth(), getHeight());
+        }
+    }
+
     private void aggiungiTitolo(JPanel pnl, String testo) {
         pnl.setBorder(BorderFactory.createTitledBorder(
             BorderFactory.createLineBorder(ACCENT_YELLOW, 1),
@@ -188,11 +197,18 @@ public class TeamBuilderPage extends JPanel {
             new Font("Arial", Font.BOLD, 11), ACCENT_YELLOW));
     }
 
-    // --- Metodi helper ---
-
     private JPanel creaPanel(LayoutManager layout) {
-        JPanel p = new JPanel(layout);
-        p.setBackground(BG_PANEL);
+        JPanel p = new JPanel(layout) {
+            @Override
+            protected void paintComponent(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                g2.setColor(BG_PANEL);
+                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 15, 15);
+                g2.dispose();
+            }
+        };
+        p.setOpaque(false);
         p.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
         return p;
     }

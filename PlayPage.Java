@@ -3,28 +3,24 @@ import javax.swing.*;
 
 public class PlayPage extends JPanel {
 
-    static final Color BG_DARK       = new Color(30, 30, 40);
-    static final Color BG_PANEL      = new Color(45, 45, 60);
+    static final Color BG_PANEL      = new Color(45, 45, 60, 200);
+    static final Color BG_LOG        = new Color(20, 20, 30, 220);
     static final Color ACCENT_RED    = new Color(220, 50, 50);
     static final Color ACCENT_YELLOW = new Color(255, 220, 50);
     static final Color ACCENT_GREEN  = new Color(50, 200, 50);
     static final Color TEXT_WHITE    = Color.WHITE;
 
-    // Team 1
     JButton[] btnMosseT1 = new JButton[4];
     JButton[] btnCambioT1 = new JButton[6];
     JLabel lblHpT1, lblPokemonT1;
 
-    // Team 2
     JButton[] btnMosseT2 = new JButton[4];
     JButton[] btnCambioT2 = new JButton[6];
     JLabel lblHpT2, lblPokemonT2;
 
-    // Centro
     JButton btnGiocaTurno, btnFinisciBattaglia;
     JTextArea txtLog;
 
-    // Stato battaglia
     PokemonInBattaglia[] squadraT1;
     PokemonInBattaglia[] squadraT2;
     int activePokemonT1 = 0;
@@ -35,12 +31,14 @@ public class PlayPage extends JPanel {
     boolean mossaSceltaT2 = false;
     boolean battersiFinita = false;
 
+    Image sfondo;
+
     PlayPage(Team t1, Team t2, MainController controller) {
         this.setLayout(new BorderLayout(10, 10));
-        this.setBackground(BG_DARK);
+        this.setOpaque(false);
         this.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        sfondo = new ImageIcon("resouces/sfondo.png").getImage();
 
-        // --- Inizializza squadre ---
         squadraT1 = new PokemonInBattaglia[6];
         squadraT2 = new PokemonInBattaglia[6];
         for (int i = 0; i < 6; i++) {
@@ -48,9 +46,8 @@ public class PlayPage extends JPanel {
             if (t2.pokemons[i] != null) squadraT2[i] = new PokemonInBattaglia(t2.pokemons[i]);
         }
 
-        // ===== PANEL SINISTRO (Team 1) =====
-        JPanel pnlSinistra = new JPanel(new BorderLayout(5, 5));
-        pnlSinistra.setBackground(BG_PANEL);
+        // ===== PANEL SINISTRO =====
+        JPanel pnlSinistra = creaPanelSemitrasparente(new BorderLayout(5, 5));
         pnlSinistra.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         lblHpT1 = new JLabel(squadraT1[activePokemonT1].getHpString());
@@ -62,11 +59,9 @@ public class PlayPage extends JPanel {
         aggiornaImmagine(lblPokemonT1, squadraT1[activePokemonT1]);
         pnlSinistra.add(lblPokemonT1, BorderLayout.CENTER);
 
-        JPanel pnlControlliT1 = new JPanel(new BorderLayout(5, 5));
-        pnlControlliT1.setBackground(BG_PANEL);
+        JPanel pnlControlliT1 = creaPanelSemitrasparente(new BorderLayout(5, 5));
 
-        JPanel pnlMosseT1 = new JPanel(new GridLayout(2, 2, 5, 5));
-        pnlMosseT1.setBackground(BG_PANEL);
+        JPanel pnlMosseT1 = creaPanelSemitrasparente(new GridLayout(2, 2, 5, 5));
         for (int i = 0; i < 4; i++) {
             btnMosseT1[i] = creaBottone("", ACCENT_RED);
             final int idx = i;
@@ -75,8 +70,7 @@ public class PlayPage extends JPanel {
         }
         aggiornaMosse(btnMosseT1, squadraT1[activePokemonT1]);
 
-        JPanel pnlCambioT1 = new JPanel(new GridLayout(1, 6, 3, 3));
-        pnlCambioT1.setBackground(BG_PANEL);
+        JPanel pnlCambioT1 = creaPanelSemitrasparente(new GridLayout(1, 6, 3, 3));
         for (int i = 0; i < 6; i++) {
             btnCambioT1[i] = creaBottone("", new Color(80, 80, 120));
             btnCambioT1[i].setFont(new Font("Arial", Font.BOLD, 10));
@@ -92,9 +86,8 @@ public class PlayPage extends JPanel {
         pnlControlliT1.add(pnlCambioT1, BorderLayout.SOUTH);
         pnlSinistra.add(pnlControlliT1, BorderLayout.SOUTH);
 
-        // ===== PANEL DESTRO (Team 2) =====
-        JPanel pnlDestra = new JPanel(new BorderLayout(5, 5));
-        pnlDestra.setBackground(BG_PANEL);
+        // ===== PANEL DESTRO =====
+        JPanel pnlDestra = creaPanelSemitrasparente(new BorderLayout(5, 5));
         pnlDestra.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         lblHpT2 = new JLabel(squadraT2[activePokemonT2].getHpString());
@@ -106,11 +99,9 @@ public class PlayPage extends JPanel {
         aggiornaImmagine(lblPokemonT2, squadraT2[activePokemonT2]);
         pnlDestra.add(lblPokemonT2, BorderLayout.CENTER);
 
-        JPanel pnlControlliT2 = new JPanel(new BorderLayout(5, 5));
-        pnlControlliT2.setBackground(BG_PANEL);
+        JPanel pnlControlliT2 = creaPanelSemitrasparente(new BorderLayout(5, 5));
 
-        JPanel pnlMosseT2 = new JPanel(new GridLayout(2, 2, 5, 5));
-        pnlMosseT2.setBackground(BG_PANEL);
+        JPanel pnlMosseT2 = creaPanelSemitrasparente(new GridLayout(2, 2, 5, 5));
         for (int i = 0; i < 4; i++) {
             btnMosseT2[i] = creaBottone("", ACCENT_RED);
             final int idx = i;
@@ -119,8 +110,7 @@ public class PlayPage extends JPanel {
         }
         aggiornaMosse(btnMosseT2, squadraT2[activePokemonT2]);
 
-        JPanel pnlCambioT2 = new JPanel(new GridLayout(1, 6, 3, 3));
-        pnlCambioT2.setBackground(BG_PANEL);
+        JPanel pnlCambioT2 = creaPanelSemitrasparente(new GridLayout(1, 6, 3, 3));
         for (int i = 0; i < 6; i++) {
             btnCambioT2[i] = creaBottone("", new Color(80, 80, 120));
             btnCambioT2[i].setFont(new Font("Arial", Font.BOLD, 10));
@@ -137,22 +127,20 @@ public class PlayPage extends JPanel {
         pnlDestra.add(pnlControlliT2, BorderLayout.SOUTH);
 
         // ===== PANEL CENTRALE =====
-        JPanel pnlCentro = new JPanel(new BorderLayout(5, 5));
-        pnlCentro.setBackground(BG_DARK);
+        JPanel pnlCentro = creaPanelSemitrasparente(new BorderLayout(5, 5));
         pnlCentro.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        JPanel pnlPulsanti = new JPanel(new GridLayout(2, 1, 5, 5));
-        pnlPulsanti.setBackground(BG_DARK);
+        JPanel pnlPulsanti = creaPanelSemitrasparente(new GridLayout(2, 1, 5, 5));
         pnlPulsanti.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         btnGiocaTurno = creaBottone("Gioca Turno", ACCENT_YELLOW);
-        btnGiocaTurno.setForeground(BG_DARK);
+        btnGiocaTurno.setForeground(new Color(30, 30, 40));
         btnGiocaTurno.setFont(new Font("Arial", Font.BOLD, 16));
         btnGiocaTurno.setPreferredSize(new Dimension(150, 50));
         btnGiocaTurno.addActionListener(e -> giocaTurno());
 
         btnFinisciBattaglia = creaBottone("Fine", ACCENT_YELLOW);
-        btnFinisciBattaglia.setForeground(BG_DARK);
+        btnFinisciBattaglia.setForeground(new Color(30, 30, 40));
         btnFinisciBattaglia.setFont(new Font("Arial", Font.BOLD, 16));
         btnFinisciBattaglia.setEnabled(false);
         btnFinisciBattaglia.setPreferredSize(new Dimension(150, 50));
@@ -164,6 +152,7 @@ public class PlayPage extends JPanel {
 
         txtLog = new JTextArea();
         txtLog.setEditable(false);
+        txtLog.setOpaque(true);
         txtLog.setBackground(new Color(20, 20, 30));
         txtLog.setForeground(TEXT_WHITE);
         txtLog.setFont(new Font("Monospaced", Font.PLAIN, 13));
@@ -171,11 +160,39 @@ public class PlayPage extends JPanel {
         txtLog.setWrapStyleWord(true);
         JScrollPane scrollLog = new JScrollPane(txtLog);
         scrollLog.setBorder(BorderFactory.createLineBorder(ACCENT_YELLOW));
+        scrollLog.setOpaque(false);
+        scrollLog.getViewport().setOpaque(false);
         pnlCentro.add(scrollLog, BorderLayout.CENTER);
 
         this.add(pnlSinistra, BorderLayout.WEST);
         this.add(pnlCentro, BorderLayout.CENTER);
         this.add(pnlDestra, BorderLayout.EAST);
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        if (sfondo != null) {
+            g.drawImage(sfondo, 0, 0, getWidth(), getHeight(), this);
+            g.setColor(new Color(0, 0, 0, 100));
+            g.fillRect(0, 0, getWidth(), getHeight());
+        }
+    }
+
+    // Crea un pannello semitrasparente con angoli arrotondati
+    private JPanel creaPanelSemitrasparente(LayoutManager layout) {
+        JPanel p = new JPanel(layout) {
+            @Override
+            protected void paintComponent(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                g2.setColor(BG_PANEL);
+                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 15, 15);
+                g2.dispose();
+            }
+        };
+        p.setOpaque(false);
+        return p;
     }
 
     // --- Logica battaglia ---
@@ -222,13 +239,11 @@ public class PlayPage extends JPanel {
         String log = BattleEngine.giocaTurno(pkT1, pkT2, mossaSelezionataT1, mossaSelezionataT2);
         appendLog(log);
 
-        // Reset selezione e flag
         mossaSelezionataT1 = null;
         mossaSelezionataT2 = null;
         mossaSceltaT1 = false;
         mossaSceltaT2 = false;
 
-        // Riabilita bottoni mosse
         aggiornaMosse(btnMosseT1, squadraT1[activePokemonT1]);
         aggiornaMosse(btnMosseT2, squadraT2[activePokemonT2]);
 
@@ -241,7 +256,7 @@ public class PlayPage extends JPanel {
     private void gestisciKo(int team) {
         if (team == 1) {
             for (int i = 0; i < 6; i++) {
-                if (i == activePokemonT1) continue; // salta quello appena sconfitto
+                if (i == activePokemonT1) continue;
                 if (squadraT1[i] != null && !squadraT1[i].isKo()) {
                     activePokemonT1 = i;
                     aggiornaImmagine(lblPokemonT1, squadraT1[i]);
@@ -251,13 +266,13 @@ public class PlayPage extends JPanel {
                     return;
                 }
             }
-            appendLog("Team 2 ha vinto la battaglia!");
+            appendLog("🏆 Team 2 ha vinto la battaglia!");
             btnGiocaTurno.setEnabled(false);
             btnFinisciBattaglia.setEnabled(true);
             battersiFinita = true;
         } else {
             for (int i = 0; i < 6; i++) {
-                if (i == activePokemonT2) continue; // salta quello appena sconfitto
+                if (i == activePokemonT2) continue;
                 if (squadraT2[i] != null && !squadraT2[i].isKo()) {
                     activePokemonT2 = i;
                     aggiornaImmagine(lblPokemonT2, squadraT2[i]);
@@ -267,7 +282,7 @@ public class PlayPage extends JPanel {
                     return;
                 }
             }
-            appendLog("Team 1 ha vinto la battaglia!");
+            appendLog("🏆 Team 1 ha vinto la battaglia!");
             btnGiocaTurno.setEnabled(false);
             btnFinisciBattaglia.setEnabled(true);
             battersiFinita = true;
@@ -308,8 +323,6 @@ public class PlayPage extends JPanel {
         lblHpT1.setText(squadraT1[activePokemonT1].getHpString());
         lblHpT2.setText(squadraT2[activePokemonT2].getHpString());
     }
-
-    // --- Metodi helper UI ---
 
     private void aggiornaImmagine(JLabel lbl, PokemonInBattaglia pk) {
         if (pk != null) {

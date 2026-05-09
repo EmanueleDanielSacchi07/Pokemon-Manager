@@ -4,10 +4,9 @@ import java.io.*;
 
 public class ShowTeamPage extends JPanel {
 
-    static final Color BG_DARK       = new Color(30, 30, 40);
-    static final Color BG_PANEL      = new Color(45, 45, 60);
     static final Color ACCENT_RED    = new Color(220, 50, 50);
     static final Color ACCENT_YELLOW = new Color(255, 220, 50);
+    static final Color BG_PANEL      = new Color(45, 45, 60, 180); // semitrasparente
     static final Color TEXT_WHITE    = Color.WHITE;
 
     JComboBox<String> cbxTeam;
@@ -15,11 +14,13 @@ public class ShowTeamPage extends JPanel {
     JPanel pnlTeam;
     Teams teams;
     Mosse mosseList;
+    Image sfondo;
 
     ShowTeamPage(MainController controller) {
         this.setLayout(new BorderLayout(10, 10));
-        this.setBackground(BG_DARK);
+        this.setOpaque(false);
         this.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        sfondo = new ImageIcon("resouces/sfondo.png").getImage();
 
         // --- Caricamento dati ---
         mosseList = new Mosse();
@@ -29,9 +30,9 @@ public class ShowTeamPage extends JPanel {
             teams.readPokemonFromFile(i, mosseList);
         }
 
-        // --- NORTH: titolo + combobox + indietro ---
+        // --- NORTH ---
         JPanel pnlNorth = new JPanel(new BorderLayout(10, 10));
-        pnlNorth.setBackground(BG_DARK);
+        pnlNorth.setOpaque(false);
         pnlNorth.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
         JLabel lblTitolo = new JLabel("Visualizza Team");
@@ -41,7 +42,7 @@ public class ShowTeamPage extends JPanel {
         pnlNorth.add(lblTitolo, BorderLayout.NORTH);
 
         JPanel pnlControlli = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 5));
-        pnlControlli.setBackground(BG_DARK);
+        pnlControlli.setOpaque(false);
 
         cbxTeam = new JComboBox<>();
         cbxTeam.setBackground(new Color(60, 60, 80));
@@ -60,9 +61,9 @@ public class ShowTeamPage extends JPanel {
         pnlNorth.add(pnlControlli, BorderLayout.CENTER);
         this.add(pnlNorth, BorderLayout.NORTH);
 
-        // --- CENTER: griglia pokemon ---
+        // --- CENTER ---
         pnlTeam = new JPanel(new GridLayout(2, 3, 10, 10));
-        pnlTeam.setBackground(BG_DARK);
+        pnlTeam.setOpaque(false);
         pnlTeam.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         this.add(pnlTeam, BorderLayout.CENTER);
 
@@ -73,6 +74,17 @@ public class ShowTeamPage extends JPanel {
                 aggiornaTeam();
             }
         });
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        if (sfondo != null) {
+            g.drawImage(sfondo, 0, 0, getWidth(), getHeight(), this);
+            // overlay scuro per leggibilità
+            g.setColor(new Color(0, 0, 0, 120));
+            g.fillRect(0, 0, getWidth(), getHeight());
+        }
     }
 
     private void aggiornaTeam() {
@@ -97,7 +109,6 @@ public class ShowTeamPage extends JPanel {
             teams.readPokemonFromFile(i, mosseList);
         }
 
-        // Rimuovi il listener prima di modificare la combobox
         var listeners = cbxTeam.getActionListeners();
         for (var l : listeners) cbxTeam.removeActionListener(l);
 
@@ -106,13 +117,20 @@ public class ShowTeamPage extends JPanel {
             cbxTeam.addItem(teams.teams[i].nome);
         }
 
-        // Riaggiungi il listener
         cbxTeam.addActionListener(e -> aggiornaTeam());
     }
 
     private JPanel creaPokemonCard(Pokemon p, int slotIndex, int teamIndex) {
-        JPanel card = new JPanel(new BorderLayout(5, 5));
-        card.setBackground(BG_PANEL);
+        JPanel card = new JPanel(new BorderLayout(5, 5)) {
+            @Override
+            protected void paintComponent(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setColor(BG_PANEL);
+                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 12, 12);
+                g2.dispose();
+            }
+        };
+        card.setOpaque(false);
         card.setBorder(BorderFactory.createCompoundBorder(
             BorderFactory.createLineBorder(ACCENT_YELLOW, 1),
             BorderFactory.createEmptyBorder(8, 8, 8, 8)
@@ -120,7 +138,7 @@ public class ShowTeamPage extends JPanel {
 
         if (p == null) {
             JLabel lblVuoto = new JLabel("Slot vuoto");
-            lblVuoto.setForeground(new Color(100, 100, 120));
+            lblVuoto.setForeground(new Color(180, 180, 200));
             lblVuoto.setFont(new Font("Arial", Font.ITALIC, 14));
             lblVuoto.setHorizontalAlignment(SwingConstants.CENTER);
             card.add(lblVuoto, BorderLayout.CENTER);
@@ -137,7 +155,7 @@ public class ShowTeamPage extends JPanel {
 
         // --- Info ---
         JPanel pnlInfo = new JPanel(new GridLayout(6, 1, 2, 2));
-        pnlInfo.setBackground(BG_PANEL);
+        pnlInfo.setOpaque(false);
 
         String soprannome = (p.nomePersonale != null && !p.nomePersonale.isBlank())
             ? p.nomePersonale + " (" + p.nome + ")" : p.nome;
@@ -153,7 +171,6 @@ public class ShowTeamPage extends JPanel {
 
         pnlInfo.add(creaLabel("Lv: " + p.livello, Font.PLAIN, 12));
 
-        // --- Bottone elimina ---
         JButton btnElimina = creaBottone("Elimina");
         btnElimina.setBackground(ACCENT_RED);
         btnElimina.setFont(new Font("Arial", Font.BOLD, 11));
@@ -177,11 +194,9 @@ public class ShowTeamPage extends JPanel {
 
         if (conferma != JOptionPane.YES_OPTION) return;
 
-        // Rimuovi dal team in memoria
         team.pokemons[slotIndex] = null;
         team.countPokemon--;
 
-        // Riscrivi il file CSV senza il pokemon eliminato
         String fileName = "teams/Team" + (teamIndex + 1) + ".csv";
         try (PrintWriter pw = new PrintWriter(new FileWriter(fileName, false))) {
             for (int i = 0; i < 6; i++) {

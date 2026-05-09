@@ -6,16 +6,19 @@ public class SelectTeamPage extends JPanel {
     JButton btnPlay, btnIndietro;
     JPanel pnlMid, pnlCenter;
     Teams teams;
+    MainController controller;
+    Image sfondo;
 
-    static final Color BG_DARK       = new Color(30, 30, 40);
-    static final Color BG_PANEL      = new Color(45, 45, 60);
     static final Color ACCENT_RED    = new Color(220, 50, 50);
     static final Color ACCENT_YELLOW = new Color(255, 220, 50);
+    static final Color BG_PANEL      = new Color(45, 45, 60, 180);
     static final Color TEXT_WHITE    = Color.WHITE;
 
     SelectTeamPage(MainController controller) {
+        this.controller = controller;
         this.setLayout(new GridBagLayout());
-        this.setBackground(BG_DARK);
+        this.setOpaque(false);
+        sfondo = new ImageIcon("resouces/sfondo.png").getImage();
 
         // --- Titolo ---
         JLabel lblTitolo = new JLabel("Seleziona i Team");
@@ -27,7 +30,6 @@ public class SelectTeamPage extends JPanel {
         teams = new Teams();
         Mosse mosseList = new Mosse();
         mosseList.readFromMosseFile();
-        teams = new Teams();
         for (int i = 0; i < 6; i++) {
             teams.readPokemonFromFile(i, mosseList);
         }
@@ -42,20 +44,31 @@ public class SelectTeamPage extends JPanel {
         btnIndietro.addActionListener(new PageSwitchListener(controller, "main"));
         btnPlay.addActionListener(new PlayListener(controller, cbxTeam1, cbxTeam2, teams));
 
-        pnlMid = new JPanel(new GridLayout(2, 1, 5, 5));
-        pnlMid.setBackground(BG_DARK);
+        pnlMid = new JPanel(new GridLayout(2, 1, 5, 5)) {
+            @Override
+            protected void paintComponent(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setColor(BG_PANEL);
+                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 15, 15);
+                g2.dispose();
+            }
+        };
+        pnlMid.setOpaque(false);
         pnlMid.add(btnIndietro);
         pnlMid.add(btnPlay);
 
-        // --- Pannello centrale ---
-        pnlCenter = new JPanel(new GridLayout(1, 3, 20, 20));
-        pnlCenter.setBackground(BG_DARK);
+        pnlCenter = new JPanel(new GridLayout(1, 3, 20, 20)) {
+            @Override
+            protected void paintComponent(Graphics g) {
+                // trasparente
+            }
+        };
+        pnlCenter.setOpaque(false);
         pnlCenter.setBorder(BorderFactory.createEmptyBorder(20, 40, 20, 40));
         pnlCenter.add(cbxTeam1);
         pnlCenter.add(pnlMid);
         pnlCenter.add(cbxTeam2);
 
-        // --- Layout con GridBagLayout per centrare tutto ---
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(15, 15, 15, 15);
         gbc.gridx = 0;
@@ -69,26 +82,34 @@ public class SelectTeamPage extends JPanel {
         addComponentListener(new java.awt.event.ComponentAdapter() {
             @Override
             public void componentShown(java.awt.event.ComponentEvent e) {
-                ricaricaTeams(controller);
+                ricaricaTeams();
             }
         });
     }
 
-    private void ricaricaTeams(MainController controller) {
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        if (sfondo != null) {
+            g.drawImage(sfondo, 0, 0, getWidth(), getHeight(), this);
+            g.setColor(new Color(0, 0, 0, 100));
+            g.fillRect(0, 0, getWidth(), getHeight());
+        }
+    }
+
+    private void ricaricaTeams() {
         Mosse mosseList = new Mosse();
         mosseList.readFromMosseFile();
         teams = new Teams();
         for (int i = 0; i < 6; i++) {
             teams.readPokemonFromFile(i, mosseList);
         }
-        // Aggiorna le combobox
         cbxTeam1.removeAllItems();
         cbxTeam2.removeAllItems();
         for (int i = 0; i < 6; i++) {
             cbxTeam1.addItem(teams.teams[i].nome);
             cbxTeam2.addItem(teams.teams[i].nome);
         }
-        // Aggiorna il listener con i nuovi team
         for (var l : btnPlay.getActionListeners()) {
             btnPlay.removeActionListener(l);
         }
