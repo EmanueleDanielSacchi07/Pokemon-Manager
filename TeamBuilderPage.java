@@ -2,7 +2,7 @@ import java.awt.*;
 import javax.swing.border.*;
 import javax.swing.*;
 
-public class TeamBuilderPage extends JPanel {
+public class TeamBuilderPage extends JPanel { // Pagina teamBuilder
     JComboBox<String> cbxSelezPokemon;
     JTextField txtNome, txtIVhp, txtIVatk, txtIVspatk, txtIVdef, txtIVspdef, txtIVspeed;
     JTextField txtEVhp, txtEVatk, txtEVspatk, txtEVdef, txtEVspdef, txtEVspeed;
@@ -26,13 +26,13 @@ public class TeamBuilderPage extends JPanel {
 
     Image sfondo;
 
-    static final Color BG_PANEL      = new Color(45, 45, 60, 200);
-    static final Color BG_FIELD      = new Color(60, 60, 80);
-    static final Color ACCENT_RED    = new Color(220, 50, 50);
-    static final Color ACCENT_YELLOW = new Color(255, 220, 50);
-    static final Color ACCENT_GREEN  = new Color(50, 180, 50);
-    static final Color TEXT_WHITE    = Color.WHITE;
-    static final Color TEXT_DIM      = new Color(180, 180, 200);
+    static Color BG_PANEL      = new Color(45, 45, 60, 200);
+    static Color BG_FIELD      = new Color(60, 60, 80);
+    static Color ACCENT_RED    = new Color(220, 50, 50);
+    static Color ACCENT_YELLOW = new Color(255, 220, 50);
+    static Color ACCENT_GREEN  = new Color(50, 180, 50);
+    static Color TEXT_WHITE    = Color.WHITE;
+    static Color TEXT_DIM      = new Color(180, 180, 200);
 
     TeamBuilderPage(MainController controller) {
         this.setLayout(new GridLayout(5, 1, 0, 4));

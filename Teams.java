@@ -1,7 +1,15 @@
+/*
+                        --- Progetto Java Swing --- 
+                              POKEMON MANAGER
+                  Autori: Sacchi Emanuele, Angelo Gurraj
+                  Classe: 4G
+                  Mese e Anno: Maggio 2026
+
+*/
 import java.io.*;
 import java.util.*;
 
-public class Teams {
+public class Teams {  // Classe che gestisce i 6 team tramite i file csv
     Team[] teams;
 
     Teams() {
@@ -10,8 +18,10 @@ public class Teams {
             teams[i] = new Team("Team " + (i + 1));
     }
 
+    // Scrive un nuovo pokemon nel file csv
+    // Team index è il numero del team nella quale inserire il pokemon
     boolean writePokemonOnFile(Pokemon p, int teamIndex) {
-        boolean thereIsSpace = teams[teamIndex].newPokemon(p);
+        boolean thereIsSpace = teams[teamIndex].newPokemon(p); //Controlla se sono gia stati inseriti 6 pokemon (Ogni team ne può avere un max di 6)
         if (!thereIsSpace) return false;
 
         teams[teamIndex].countPokemon++;
@@ -26,6 +36,7 @@ public class Teams {
         }
     }
 
+    //Legge un pokemon nel file 
     boolean readPokemonFromFile(int teamIndex, Mosse mosseList) {
         String fileName = "teams/Team" + (teamIndex + 1) + ".csv";
 
@@ -100,6 +111,7 @@ public class Teams {
 
                 String immagine = st.nextToken();
 
+                // Crea l'oggetto pokemon e tramite il metodo newPokemon aumenta il counter dei pokemon nel team
                 Pokemon p = new Pokemon(nome, nomePersonale, tipi, livello, ev, iv, mosse, bst, natura, immagine);
                 teams[teamIndex].newPokemon(p);
                 teams[teamIndex].countPokemon++;

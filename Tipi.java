@@ -1,7 +1,18 @@
-public class Tipi {
+/*
+                        --- Progetto Java Swing --- 
+                              POKEMON MANAGER
+                  Autori: Sacchi Emanuele, Angelo Gurraj
+                  Classe: 4G
+                  Mese e Anno: Maggio 2026
+
+*/
+public class Tipi { // Lista di tutti i tipi di pokemon
 
     Tipo[] tipi = new Tipo[18];
-    double[][] efficacia = new double[18][18];
+
+    // Matrice per gestire il calcolo dell'eficacia 
+    // del tipo di una mossa sul tipo di un pokemon
+    double[][] efficacia = new double[18][18]; 
 
     public Tipi() {
 
@@ -25,7 +36,7 @@ public class Tipi {
         tipi[16] = new Tipo("acciaio");
         tipi[17] = new Tipo("folletto");
 
-        // --- INIZIALIZZA TUTTO A 1 (neutro) ---
+        // --- INIZIALIZZA TUTTE LE EFFICACIE A 1 (danno neutro) ---
         for (int i = 0; i < 18; i++) {
             for (int j = 0; j < 18; j++) {
                 efficacia[i][j] = 1.0;
@@ -33,9 +44,9 @@ public class Tipi {
         }
 
         // NORMALE (0)
-        setEfficacia(0, 12, 0.5);   //Normale -> Roccia
-        setEfficacia(0, 16, 0.5);   //Normale -> Acciaio
-        setEfficacia(0, 13, 0);   //Normale -> Spettro
+        setEfficacia(0, 12, 0.5);  //Normale -> Roccia
+        setEfficacia(0, 16, 0.5);  //Normale -> Acciaio
+        setEfficacia(0, 13, 0);    //Normale -> Spettro
 
         // FUOCO (1) 
         setEfficacia(1, 3, 2.0);   // Fuoco -> Erba
@@ -190,29 +201,34 @@ public class Tipi {
 
     }
 
+    // Inserisce il modificatore efficacia nella matrice 
     private void setEfficacia(int att, int dif, double valore) {
         efficacia[att][dif] = valore;
     }
 
+    // Restituisce il tipo tramite l'indice nell array
     public Tipo getByIndex(int index) {
         return tipi[index];
     }
 
+    // Resituisce il tipo tramite il nome del tipo 
     public Tipo getByName(String name) {
-        for (Tipo t : tipi) {
-            if (t.getNome().equalsIgnoreCase(name)) {
+        for (Tipo t : tipi) { 
+            if (t.getNome().equalsIgnoreCase(name)) {   // equalsIgnoreCase gestisce toLowerCase e toUpperCase
                 return t;
             }
         }
         return null;
     }
 
+    // Restituisce il valore dell efficacia tramite i due tipi (es. att = Fuoco, dif = erba, efficacia = 2)
     public double getEfficacia(Tipo attaccante, Tipo difensore) {
         int i = indexOf(attaccante);
         int j = indexOf(difensore);
         return efficacia[i][j];
     }
 
+    // Tramite il nome del tipo cerca nell'array dove si trova
     private int indexOf(Tipo t) {
         for (int i = 0; i < tipi.length; i++) {
             if (tipi[i].getNome().equals(t.getNome())) {
