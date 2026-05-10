@@ -1,6 +1,14 @@
+/*
+                        --- Progetto Java Swing --- 
+                              POKEMON MANAGER
+                  Autori: Sacchi Emanuele, Angelo Gurraj
+                  Classe: 4G
+                  Mese e Anno: Maggio 2026
+
+*/
 import java.util.*;
 
-public class Pokemon {
+public class Pokemon { // Classe che identifica un pokemon
 
     // Pokemon
     String nome;
@@ -37,18 +45,6 @@ public class Pokemon {
         this.tipi = tipi;
         this.immagine = immagine;
     }
-
-    // Getter
-    public String getNome() { return nome; }
-    public String getNomePersonale() { return nomePersonale; }
-    public ArrayList<Tipo> getTipi() { return tipi; }
-    public int getLivello() { return livello; }
-    public Ev getEv() { return ev; }
-    public Iv getIv() { return iv; }
-    public ArrayList<Mossa> getMosse() { return mosse; }
-    public BaseStats getBaseStats() { return bst; }
-    public Natura getNatura() { return natura; }
-    public String getImmagine() { return immagine; }
 
     // Aggiunta sicura
     public void addTipo(Tipo t) {
