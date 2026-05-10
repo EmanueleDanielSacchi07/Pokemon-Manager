@@ -1,4 +1,12 @@
-public class Team {
+/*
+                        --- Progetto Java Swing --- 
+                              POKEMON MANAGER
+                  Autori: Sacchi Emanuele, Angelo Gurraj
+                  Classe: 4G
+                  Mese e Anno: Maggio 2026
+
+*/
+public class Team { // Classe che definisce un singolo team
     Pokemon []pokemons;
     String nome;
     int countPokemon = 0;

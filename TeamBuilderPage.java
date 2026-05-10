@@ -1,8 +1,16 @@
+/*
+                        --- Progetto Java Swing --- 
+                              POKEMON MANAGER
+                  Autori: Sacchi Emanuele, Angelo Gurraj
+                  Classe: 4G
+                  Mese e Anno: Maggio 2026
+
+*/
 import java.awt.*;
 import javax.swing.border.*;
 import javax.swing.*;
 
-public class TeamBuilderPage extends JPanel { // Pagina teamBuilder
+public class TeamBuilderPage extends JPanel {
     JComboBox<String> cbxSelezPokemon;
     JTextField txtNome, txtIVhp, txtIVatk, txtIVspatk, txtIVdef, txtIVspdef, txtIVspeed;
     JTextField txtEVhp, txtEVatk, txtEVspatk, txtEVdef, txtEVspdef, txtEVspeed;
@@ -46,12 +54,13 @@ public class TeamBuilderPage extends JPanel { // Pagina teamBuilder
         pnl4 = creaPanel(new GridLayout(1, 4, 6, 6));
         pnl5 = creaPanel(new GridLayout(1, 8, 6, 6));
 
-        aggiungiTitolo(pnl2, "EV");
+        // il metodo aggiungiTitolo crea un titledBorder al panel 
+        aggiungiTitolo(pnl2, "EV"); 
         aggiungiTitolo(pnl3, "IV");
         aggiungiTitolo(pnl4, "MOSSE");
         aggiungiTitolo(pnl5, "TEAM / NATURA");
 
-        // --- Caricamento dati ---
+        // Classi del progetto e letture dal file csv
         pkDex = new Pokedex();
         pkDex.readFromPokedexFile();
         mosseList = new Mosse();
@@ -59,7 +68,6 @@ public class TeamBuilderPage extends JPanel { // Pagina teamBuilder
         natureList = new NatureList();
         teams = new Teams();
 
-        // ---PANEL 1---
         lblPokemon = new JLabel();
         lblPokemon.setPreferredSize(new Dimension(120, 120));
         lblPokemon.setHorizontalAlignment(SwingConstants.CENTER);
@@ -89,7 +97,6 @@ public class TeamBuilderPage extends JPanel { // Pagina teamBuilder
         this.add(pnl1);
         cbxSelezPokemon.setSelectedIndex(0);
 
-        // ---PANEL 2--- (EV)
         txtEVhp    = creaTxtField("HP");
         txtEVatk   = creaTxtField("Atk");
         txtEVspatk = creaTxtField("Sp.Atk");
@@ -111,7 +118,6 @@ public class TeamBuilderPage extends JPanel { // Pagina teamBuilder
         pnl2.add(txtEVspeed);
         this.add(pnl2);
 
-        // ---PANEL 3--- (IV)
         txtIVhp    = creaIVField("HP");
         txtIVatk   = creaIVField("Atk");
         txtIVspatk = creaIVField("Sp.Atk");
@@ -127,7 +133,6 @@ public class TeamBuilderPage extends JPanel { // Pagina teamBuilder
         pnl3.add(txtIVspeed);
         this.add(pnl3);
 
-        // ---PANEL 4--- (Mosse)
         cbxMossa1 = new JComboBox<>();
         stilizzaCbx(cbxMossa1, "Mossa 1:");
         for (Mossa mossa : mosseList.mosse) cbxMossa1.addItem(mossa.nome);
@@ -153,7 +158,6 @@ public class TeamBuilderPage extends JPanel { // Pagina teamBuilder
         pnl4.add(cbxMossa4);
         this.add(pnl4);
 
-        // ---PANEL 5--- (Team + Natura + Aggiungi)
         slotsTeam = new JRadioButton[6];
         grpTeam = new ButtonGroup();
         for (int i = 0; i < 6; i++) {
@@ -178,6 +182,7 @@ public class TeamBuilderPage extends JPanel { // Pagina teamBuilder
         this.add(pnl5);
     }
 
+    // Disegna l'immagine di sfondo e un overlay scuro sopra 
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -188,6 +193,7 @@ public class TeamBuilderPage extends JPanel { // Pagina teamBuilder
         }
     }
 
+    // Aggiunge un bordo con titolo colorato al pannello passato 
     private void aggiungiTitolo(JPanel pnl, String testo) {
         pnl.setBorder(BorderFactory.createTitledBorder(
             BorderFactory.createLineBorder(ACCENT_YELLOW, 1),
@@ -197,6 +203,7 @@ public class TeamBuilderPage extends JPanel { // Pagina teamBuilder
             new Font("Arial", Font.BOLD, 11), ACCENT_YELLOW));
     }
 
+    // Crea un pannello semitrasparente con angoli arrotondati 
     private JPanel creaPanel(LayoutManager layout) {
         JPanel p = new JPanel(layout) {
             @Override
@@ -213,6 +220,7 @@ public class TeamBuilderPage extends JPanel { // Pagina teamBuilder
         return p;
     }
 
+    // Crea un bottone stilizzato con colore e testo personalizzati 
     private JButton creaBottone(String testo, Color colore) {
         JButton btn = new JButton(testo);
         btn.setBackground(colore);
@@ -224,6 +232,7 @@ public class TeamBuilderPage extends JPanel { // Pagina teamBuilder
         return btn;
     }
 
+    // Crea una JTextField stilizzata con titolo e colori del tema 
     private JTextField creaTxtField(String titolo) {
         JTextField txt = new JTextField();
         txt.setBackground(BG_FIELD);
@@ -242,6 +251,7 @@ public class TeamBuilderPage extends JPanel { // Pagina teamBuilder
         return txt;
     }
 
+    // Crea una JTextField per gli IV con documento validatore e valore iniziale 31 
     private JTextField creaIVField(String titolo) {
         JTextField txt = creaTxtField(titolo);
         txt.setDocument(new IVDocument());
@@ -249,6 +259,7 @@ public class TeamBuilderPage extends JPanel { // Pagina teamBuilder
         return txt;
     }
 
+    // Applica stile grafico (colori, font, bordo) a una JComboBox 
     private void stilizzaCbx(JComboBox<String> cbx, String titolo) {
         cbx.setBackground(BG_FIELD);
         cbx.setForeground(TEXT_WHITE);
@@ -263,6 +274,7 @@ public class TeamBuilderPage extends JPanel { // Pagina teamBuilder
         ));
     }
 
+    // Riporta tutti i campi della pagina ai valori predefiniti 
     public void reset() {
         cbxSelezPokemon.setSelectedIndex(0);
         txtNome.setText("");

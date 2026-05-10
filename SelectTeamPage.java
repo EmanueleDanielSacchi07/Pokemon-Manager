@@ -1,7 +1,15 @@
+/*
+                        --- Progetto Java Swing --- 
+                              POKEMON MANAGER
+                  Autori: Sacchi Emanuele, Angelo Gurraj
+                  Classe: 4G
+                  Mese e Anno: Maggio 2026
+
+*/
 import java.awt.*;
 import javax.swing.*;
 
-public class SelectTeamPage extends JPanel {
+public class SelectTeamPage extends JPanel { // Pagina tra la main e la play che fa scegliere i team
     JComboBox<String> cbxTeam1, cbxTeam2;
     JButton btnPlay, btnIndietro;
     JPanel pnlMid, pnlCenter;
@@ -9,10 +17,10 @@ public class SelectTeamPage extends JPanel {
     MainController controller;
     Image sfondo;
 
-    static final Color ACCENT_RED    = new Color(220, 50, 50);
-    static final Color ACCENT_YELLOW = new Color(255, 220, 50);
-    static final Color BG_PANEL      = new Color(45, 45, 60, 180);
-    static final Color TEXT_WHITE    = Color.WHITE;
+    static Color ACCENT_RED    = new Color(220, 50, 50);
+    static Color ACCENT_YELLOW = new Color(255, 220, 50);
+    static Color BG_PANEL      = new Color(45, 45, 60, 180);
+    static Color TEXT_WHITE    = Color.WHITE;
 
     SelectTeamPage(MainController controller) {
         this.controller = controller;
