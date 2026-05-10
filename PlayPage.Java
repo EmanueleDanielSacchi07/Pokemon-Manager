@@ -1,14 +1,22 @@
+/*
+                        --- Progetto Java Swing --- 
+                              POKEMON MANAGER
+                  Autori: Sacchi Emanuele, Angelomaria Gurraj
+                  Classe: 4G - Gruppo 10
+                  Mese e Anno: Maggio 2026
+
+*/
 import java.awt.*;
 import javax.swing.*;
 
-public class PlayPage extends JPanel {
+public class PlayPage extends JPanel { // Pagina per il game
 
-    static final Color BG_PANEL      = new Color(45, 45, 60, 200);
-    static final Color BG_LOG        = new Color(20, 20, 30, 220);
-    static final Color ACCENT_RED    = new Color(220, 50, 50);
-    static final Color ACCENT_YELLOW = new Color(255, 220, 50);
-    static final Color ACCENT_GREEN  = new Color(50, 200, 50);
-    static final Color TEXT_WHITE    = Color.WHITE;
+    static Color BG_PANEL      = new Color(45, 45, 60, 200);
+    static Color BG_LOG        = new Color(20, 20, 30, 220);
+    static Color ACCENT_RED    = new Color(220, 50, 50);
+    static Color ACCENT_YELLOW = new Color(255, 220, 50);
+    static Color ACCENT_GREEN  = new Color(50, 200, 50);
+    static Color TEXT_WHITE    = Color.WHITE;
 
     JButton[] btnMosseT1 = new JButton[4];
     JButton[] btnCambioT1 = new JButton[6];
@@ -33,12 +41,14 @@ public class PlayPage extends JPanel {
 
     Image sfondo;
 
+    // Costruttore: inizializza la pagina di battaglia con i due team, crea tutti i pannelli e i componenti
     PlayPage(Team t1, Team t2, MainController controller) {
         this.setLayout(new BorderLayout(10, 10));
         this.setOpaque(false);
         this.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         sfondo = new ImageIcon("resouces/sfondo.png").getImage();
 
+        // Converte i pokemon dei team in PokemonInBattaglia con le statistiche calcolate
         squadraT1 = new PokemonInBattaglia[6];
         squadraT2 = new PokemonInBattaglia[6];
         for (int i = 0; i < 6; i++) {
@@ -104,7 +114,7 @@ public class PlayPage extends JPanel {
         JPanel pnlMosseT2 = creaPanelSemitrasparente(new GridLayout(2, 2, 5, 5));
         for (int i = 0; i < 4; i++) {
             btnMosseT2[i] = creaBottone("", ACCENT_RED);
-            final int idx = i;
+            int idx = i;
             btnMosseT2[i].addActionListener(e -> selezionaMossa(2, idx));
             pnlMosseT2.add(btnMosseT2[i]);
         }
@@ -117,7 +127,7 @@ public class PlayPage extends JPanel {
             String nome = (squadraT2[i] != null) ? squadraT2[i].pokemon.nome : "-";
             btnCambioT2[i].setText(nome);
             if (squadraT2[i] == null) btnCambioT2[i].setEnabled(false);
-            final int idx = i;
+            int idx = i;
             btnCambioT2[i].addActionListener(e -> cambiaPokemon(2, idx));
             pnlCambioT2.add(btnCambioT2[i]);
         }
@@ -169,6 +179,7 @@ public class PlayPage extends JPanel {
         this.add(pnlDestra, BorderLayout.EAST);
     }
 
+    // Disegna lo sfondo e un overlay scuro per migliorare la leggibilità
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -195,8 +206,7 @@ public class PlayPage extends JPanel {
         return p;
     }
 
-    // --- Logica battaglia ---
-
+    // Salva la mossa scelta dal team e blocca i bottoni mosse per evitare cambi successivi
     private void selezionaMossa(int team, int idx) {
         if (team == 1) {
             if (mossaSceltaT1) return;
@@ -221,6 +231,7 @@ public class PlayPage extends JPanel {
         }
     }
 
+    // Esegue un turno di battaglia, verifica che entrambi abbiano scelto, aggiorna UI e gestisce i KO
     private void giocaTurno() {
         if (battersiFinita) return;
 
@@ -239,6 +250,7 @@ public class PlayPage extends JPanel {
         String log = BattleEngine.giocaTurno(pkT1, pkT2, mossaSelezionataT1, mossaSelezionataT2);
         appendLog(log);
 
+        // Reset selezione mosse per il turno successivo
         mossaSelezionataT1 = null;
         mossaSelezionataT2 = null;
         mossaSceltaT1 = false;
@@ -253,6 +265,7 @@ public class PlayPage extends JPanel {
         if (pkT2.isKo()) gestisciKo(2);
     }
 
+    // Trova il prossimo pokemon vivo del team e lo manda in campo; se non ce ne sono dichiara la vittoria
     private void gestisciKo(int team) {
         if (team == 1) {
             for (int i = 0; i < 6; i++) {
@@ -266,7 +279,7 @@ public class PlayPage extends JPanel {
                     return;
                 }
             }
-            appendLog("🏆 Team 2 ha vinto la battaglia!");
+            appendLog("Team 2 ha vinto la battaglia!");
             btnGiocaTurno.setEnabled(false);
             btnFinisciBattaglia.setEnabled(true);
             battersiFinita = true;
@@ -282,13 +295,14 @@ public class PlayPage extends JPanel {
                     return;
                 }
             }
-            appendLog("🏆 Team 1 ha vinto la battaglia!");
+            appendLog("Team 1 ha vinto la battaglia!");
             btnGiocaTurno.setEnabled(false);
             btnFinisciBattaglia.setEnabled(true);
             battersiFinita = true;
         }
     }
 
+    // Cambia il pokemon attivo del team, blocca i bottoni mosse e consuma il turno
     private void cambiaPokemon(int team, int idx) {
         if (team == 1) {
             if (mossaSceltaT1) return;
@@ -319,11 +333,13 @@ public class PlayPage extends JPanel {
         }
     }
 
+    // Aggiorna le label HP di entrambi i pokemon attivi
     private void aggiornaUI() {
         lblHpT1.setText(squadraT1[activePokemonT1].getHpString());
         lblHpT2.setText(squadraT2[activePokemonT2].getHpString());
     }
 
+    // Carica e scala l'immagine del pokemon nella label passata
     private void aggiornaImmagine(JLabel lbl, PokemonInBattaglia pk) {
         if (pk != null) {
             ImageIcon icon = new ImageIcon(pk.pokemon.immagine);
@@ -332,6 +348,7 @@ public class PlayPage extends JPanel {
         }
     }
 
+    // Aggiorna i bottoni mosse con i nomi delle mosse del pokemon attivo, disabilita gli slot vuoti
     private void aggiornaMosse(JButton[] btns, PokemonInBattaglia pk) {
         if (pk == null) return;
         for (int i = 0; i < 4; i++) {
@@ -346,17 +363,20 @@ public class PlayPage extends JPanel {
         }
     }
 
+    // Applica stile giallo e font bold alla label degli HP
     private void stilizzaLabelHp(JLabel lbl) {
         lbl.setForeground(ACCENT_YELLOW);
         lbl.setFont(new Font("Arial", Font.BOLD, 16));
         lbl.setHorizontalAlignment(SwingConstants.CENTER);
     }
 
+    // Aggiunge una riga al log di battaglia e scrolla automaticamente in fondo
     public void appendLog(String testo) {
         txtLog.append(testo + "\n");
         txtLog.setCaretPosition(txtLog.getDocument().getLength());
     }
 
+    // Crea un bottone stilizzato con colore e font del tema
     private JButton creaBottone(String testo, Color colore) {
         JButton btn = new JButton(testo);
         btn.setBackground(colore);

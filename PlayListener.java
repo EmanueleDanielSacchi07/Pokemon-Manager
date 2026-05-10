@@ -1,6 +1,16 @@
+/*
+                        --- Progetto Java Swing --- 
+                              POKEMON MANAGER
+                  Autori: Sacchi Emanuele, Angelomaria Gurraj
+                  Classe: 4G - Gruppo 10
+                  Mese e Anno: Maggio 2026
+
+*/
 import java.awt.event.*;
 import javax.swing.*;
 
+// Tramite la page selectTeam questo action listener seleziona
+//  i team da mandare alla play page per fare partire la partita
 public class PlayListener implements ActionListener {
 
     private MainController controller;

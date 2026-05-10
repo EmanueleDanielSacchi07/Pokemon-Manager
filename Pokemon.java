@@ -1,8 +1,8 @@
 /*
                         --- Progetto Java Swing --- 
                               POKEMON MANAGER
-                  Autori: Sacchi Emanuele, Angelo Gurraj
-                  Classe: 4G
+                  Autori: Sacchi Emanuele, Angelomaria Gurraj
+                  Classe: 4G - Gruppo 10
                   Mese e Anno: Maggio 2026
 
 */
@@ -18,10 +18,10 @@ public class Pokemon { // Classe che identifica un pokemon
 
     // Statistiche
     int livello;
-    Ev ev;
-    Iv iv;
+    Ev ev; // Effort Values
+    Iv iv; // Individual Values
     ArrayList<Mossa> mosse; // max 4 mosse
-    BaseStats bst;
+    BaseStats bst; // Statistiche base 
     Natura natura;
 
     public Pokemon(String nome, String nomePersonale, ArrayList<Tipo> tipi, int livello,
@@ -46,15 +46,17 @@ public class Pokemon { // Classe che identifica un pokemon
         this.immagine = immagine;
     }
 
-    // Aggiunta sicura
+    // Aggiunge un tipo se non sono gia 2
     public void addTipo(Tipo t) {
         if (tipi.size() < 2) tipi.add(t);
     }
 
+    // Aggiunge una mossa se non sono gia 4
     public void addMossa(Mossa m) {
         if (mosse.size() < 4) mosse.add(m);
     }
 
+    // To string per il csv di un oggetto pokemon
     public String toStringCsv() {
         String strNomePersonale = (nomePersonale != null && !nomePersonale.isBlank()) ? nomePersonale : "null";
 
@@ -82,10 +84,4 @@ public class Pokemon { // Classe che identifica un pokemon
             immagine;
     }
     
-    // Statistiche finali
-    /* 
-    public Stats getStats() {
-        return StatCalculator.calculateAll(bst, iv, ev, natura, livello);
-    }
-    */    
 }

@@ -1,4 +1,15 @@
-public class BaseStats {
+/*
+                        --- Progetto Java Swing --- 
+                              POKEMON MANAGER
+                  Autori: Sacchi Emanuele, Angelomaria Gurraj
+                  Classe: 4G - Gruppo 10
+                  Mese e Anno: Maggio 2026
+
+*/
+
+// Classe che identifica l'oggetto delle statistiche base di un pokemon
+// (quelle che sono uguali per ogni specie simile)
+public class BaseStats { 
     int bstHp;
     int bstAtk;
     int bstSpaAtk;

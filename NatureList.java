@@ -1,8 +1,17 @@
+/*
+                        --- Progetto Java Swing --- 
+                              POKEMON MANAGER
+                  Autori: Sacchi Emanuele, Angelomaria Gurraj
+                  Classe: 4G - Gruppo 10
+                  Mese e Anno: Maggio 2026
+
+*/
 import java.util.*;
 
+// Popola la lista contenente tutte le diverse nature e i loro moficiatori
 public class NatureList {
 
-    ArrayList<Natura> nature;
+    private ArrayList<Natura> nature;
 
     public NatureList() {
 

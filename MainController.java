@@ -1,15 +1,23 @@
-/* Gruppo 10 */
+/*
+                        --- Progetto Java Swing --- 
+                              POKEMON MANAGER
+                  Autori: Sacchi Emanuele, Angelomaria Gurraj
+                  Classe: 4G - Gruppo 10
+                  Mese e Anno: Maggio 2026
 
+*/
 import javax.swing.*;
 import java.awt.*;
-
+// Main controller è la pagina che gestisce il frame e il panel 
+// container (Pannello che contiene tutti gli altri pannelli ovvero le altre pagine) 
+// Oltre che a contenere l'effettivo main per far partire il programma
 public class MainController {
 
     private JFrame frame;
     private JPanel container;
     private CardLayout layout;
 
-    public MainController() {
+    public MainController() { 
 
         // Frame
         frame = new JFrame("Pokémon Manager");

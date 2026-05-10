@@ -1,13 +1,23 @@
+/*
+                        --- Progetto Java Swing --- 
+                              POKEMON MANAGER
+                  Autori: Sacchi Emanuele, Angelomaria Gurraj
+                  Classe: 4G - Gruppo 10
+                  Mese e Anno: Maggio 2026
+
+*/
 import java.io.*;
 import java.util.*;
 
-public class Mosse {
+// Carica da file l'array con tutte le mosse presenti nel file mosse.csv
+public class Mosse {    
     Mossa []mosse;
 
     public Mosse() {
         mosse = new Mossa[165];
     }
 
+    //metodo che legge dal file
     void readFromMosseFile() {
         FileReader fr;
         BufferedReader br;

@@ -1,7 +1,15 @@
+/*
+                        --- Progetto Java Swing --- 
+                              POKEMON MANAGER
+                  Autori: Sacchi Emanuele, Angelomaria Gurraj
+                  Classe: 4G - Gruppo 10
+                  Mese e Anno: Maggio 2026
+
+*/
 import javax.swing.text.*;
 import javax.swing.*;
 
-public class EVDocument extends PlainDocument {
+public class EVDocument extends PlainDocument { // Spiegazione uguale a IvDocumet
 
     private JTextField[] allEvFields;
     private int maxTotale = 508;

@@ -1,7 +1,15 @@
+/*
+                        --- Progetto Java Swing --- 
+                              POKEMON MANAGER
+                  Autori: Sacchi Emanuele, Angelomaria Gurraj
+                  Classe: 4G - Gruppo 10
+                  Mese e Anno: Maggio 2026
+
+*/
 import java.io.*;
 import java.util.*;
 
-public class Pokedex {
+public class Pokedex { // Il pokedex è l'insieme di pokemon che appartengono ad una generazione di pokemon creati
     
     Pokemon []kanto;
 
@@ -9,6 +17,7 @@ public class Pokedex {
         kanto = new Pokemon[151];
     }
 
+    // Legge tutti i pokemon della prima generazione dal file kanto.csv 
     void readFromPokedexFile() {
         try (BufferedReader br = new BufferedReader(new FileReader("kanto.csv"))) {
             String riga;

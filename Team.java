@@ -1,8 +1,8 @@
 /*
                         --- Progetto Java Swing --- 
                               POKEMON MANAGER
-                  Autori: Sacchi Emanuele, Angelo Gurraj
-                  Classe: 4G
+                  Autori: Sacchi Emanuele, Angelomaria Gurraj
+                  Classe: 4G - Gruppo 10
                   Mese e Anno: Maggio 2026
 
 */

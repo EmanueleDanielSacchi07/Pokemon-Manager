@@ -1,7 +1,17 @@
+/*
+                        --- Progetto Java Swing --- 
+                              POKEMON MANAGER
+                  Autori: Sacchi Emanuele, Angelo Gurraj
+                  Classe: 4G
+                  Mese e Anno: Maggio 2026
+
+*/
 import java.awt.event.*;
 import java.util.ArrayList;
 import javax.swing.*;
 
+// Listener che so occupa di creare l'oggetto pokemon quando l'utente tramite 
+// la pagina TeamBuiler ne crea uno e preme su aggiungi
 public class AddPokemonListener implements ActionListener {
 
     private TeamBuilderPage page;

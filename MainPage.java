@@ -1,7 +1,15 @@
+/*
+                        --- Progetto Java Swing --- 
+                              POKEMON MANAGER
+                  Autori: Sacchi Emanuele, Angelomaria Gurraj
+                  Classe: 4G - Gruppo 10
+                  Mese e Anno: Maggio 2026
+
+*/
 import javax.swing.*;
 import java.awt.*;
 
-public class MainPage extends JPanel {
+public class MainPage extends JPanel { // Pagina main (La prima mostrata)
 
     JButton btnPlay, btnTeambuilder, btnShowteam, btnCredit;
     JLabel lblTitolo, lblLogo;
@@ -13,7 +21,7 @@ public class MainPage extends JPanel {
         sfondo = new ImageIcon("resouces/sfondo.png").getImage();
 
         this.setLayout(new GridBagLayout());
-        // NON impostare setBackground — lo sfondo lo gestiamo con paintComponent
+
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(15, 15, 15, 15);
         gbc.fill = GridBagConstraints.NONE;
@@ -31,7 +39,7 @@ public class MainPage extends JPanel {
         this.add(lblLogo, gbc);
 
         // --- TITOLO ---
-        lblTitolo = new OutlinedLabel("Pokemon Manager", Color.BLACK, 3f);
+        lblTitolo = new JLabel("Pokemon Manager");
         lblTitolo.setFont(new Font("Arial", Font.BOLD, 50));
         lblTitolo.setForeground(new Color(255, 220, 50));
 
@@ -59,6 +67,7 @@ public class MainPage extends JPanel {
         gbc.gridx = 1; gbc.gridy = 3;
         this.add(btnCredit, gbc);
 
+        // Aggiunta dell'action listener per lo switch della pagina qunado premuto il pulsante
         btnPlay.addActionListener(new PageSwitchListener(controller, "select"));
         btnTeambuilder.addActionListener(new PageSwitchListener(controller, "team"));
         btnShowteam.addActionListener(new PageSwitchListener(controller, "showteam"));
@@ -74,6 +83,7 @@ public class MainPage extends JPanel {
         }
     }
 
+    // Crea un bottone stilizzato con colore e font del tema
     private JButton creaBottone(String testo, Dimension size) {
         JButton btn = new JButton(testo);
         btn.setPreferredSize(size);
