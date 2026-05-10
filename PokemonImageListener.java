@@ -1,12 +1,21 @@
+/*
+                        --- Progetto Java Swing --- 
+                              POKEMON MANAGER
+                  Autori: Sacchi Emanuele, Angelo Gurraj
+                  Classe: 4G
+                  Mese e Anno: Maggio 2026
+
+*/
 import java.awt.event.*;
-import java.io.File;
 import java.awt.Image;
 import javax.swing.*;
 
+// Listener della cbx di TeamBuilderPage, quando cambia pokemon 
+// della cbx cambia anche la lbl con l'immagine del pokemon esatto
 public class PokemonImageListener implements ActionListener {
     
-    private Pokedex pokedex;
-    private JLabel lblPokemon;
+    Pokedex pokedex;
+    JLabel lblPokemon;
 
     PokemonImageListener(Pokedex pokedex, JLabel lblPokemon) {
         this.pokedex = pokedex;
@@ -20,15 +29,13 @@ public class PokemonImageListener implements ActionListener {
 
         for (Pokemon p : pokedex.kanto) {
             if (p != null && p.nome.equals(selezionato)) {
-                System.out.println("Carico immagine: " + p.immagine); // debug
+    
                 ImageIcon icon = new ImageIcon(p.immagine);
+                // Rimpicciolisce 
                 Image scaled = icon.getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH);
                 lblPokemon.setIcon(new ImageIcon(scaled));
                 lblPokemon.revalidate();
                 lblPokemon.repaint();
-                File f = new File(p.immagine);
-                System.out.println("File esiste: " + f.exists());
-                System.out.println("Path assoluto: " + f.getAbsolutePath());
                 break;
             }
         }
