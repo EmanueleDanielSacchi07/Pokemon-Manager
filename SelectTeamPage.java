@@ -9,7 +9,7 @@
 import java.awt.*;
 import javax.swing.*;
 
-public class SelectTeamPage extends JPanel { // Pagina tra la main e la play che fa scegliere i team
+public class SelectTeamPage extends JPanel {
     JComboBox<String> cbxTeam1, cbxTeam2;
     JButton btnPlay, btnIndietro;
     JPanel pnlMid, pnlCenter;
@@ -52,6 +52,7 @@ public class SelectTeamPage extends JPanel { // Pagina tra la main e la play che
         btnIndietro.addActionListener(new PageSwitchListener(controller, "main"));
         btnPlay.addActionListener(new PlayListener(controller, cbxTeam1, cbxTeam2, teams));
 
+        // Pannello centrale con i due bottoni, sfondo semitrasparente arrotondato
         pnlMid = new JPanel(new GridLayout(2, 1, 5, 5)) {
             @Override
             protected void paintComponent(Graphics g) {
@@ -65,6 +66,7 @@ public class SelectTeamPage extends JPanel { // Pagina tra la main e la play che
         pnlMid.add(btnIndietro);
         pnlMid.add(btnPlay);
 
+        // Pannello contenitore delle combobox e del pannello bottoni, completamente trasparente
         pnlCenter = new JPanel(new GridLayout(1, 3, 20, 20)) {
             @Override
             protected void paintComponent(Graphics g) {
@@ -77,6 +79,7 @@ public class SelectTeamPage extends JPanel { // Pagina tra la main e la play che
         pnlCenter.add(pnlMid);
         pnlCenter.add(cbxTeam2);
 
+        // Posiziona titolo e pannello centrale con GridBagLayout
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(15, 15, 15, 15);
         gbc.gridx = 0;
@@ -87,6 +90,7 @@ public class SelectTeamPage extends JPanel { // Pagina tra la main e la play che
         gbc.gridy = 1;
         this.add(pnlCenter, gbc);
 
+        // Ricarica i team dal file ogni volta che la pagina viene mostrata
         addComponentListener(new java.awt.event.ComponentAdapter() {
             @Override
             public void componentShown(java.awt.event.ComponentEvent e) {
@@ -95,6 +99,7 @@ public class SelectTeamPage extends JPanel { // Pagina tra la main e la play che
         });
     }
 
+    // Disegna lo sfondo e un overlay scuro per migliorare la leggibilità
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -105,6 +110,8 @@ public class SelectTeamPage extends JPanel { // Pagina tra la main e la play che
         }
     }
 
+    // Rilegge i file CSV dei team, aggiorna le combobox e ricrea il listener del bottone play
+    // Cosi che quando l'utente aggiunge un nuovo pokemon la page se ne accorge
     private void ricaricaTeams() {
         Mosse mosseList = new Mosse();
         mosseList.readFromMosseFile();
@@ -118,12 +125,14 @@ public class SelectTeamPage extends JPanel { // Pagina tra la main e la play che
             cbxTeam1.addItem(teams.teams[i].nome);
             cbxTeam2.addItem(teams.teams[i].nome);
         }
+        // Rimuove il vecchio listener e ne aggiunge uno aggiornato con i nuovi team
         for (var l : btnPlay.getActionListeners()) {
             btnPlay.removeActionListener(l);
         }
         btnPlay.addActionListener(new PlayListener(controller, cbxTeam1, cbxTeam2, teams));
     }
 
+    // Crea una JComboBox stilizzata popolata con i nomi dei team
     private JComboBox<String> creaCbx(Teams teams) {
         JComboBox<String> cbx = new JComboBox<>();
         cbx.setBackground(new Color(60, 60, 80));
@@ -135,6 +144,7 @@ public class SelectTeamPage extends JPanel { // Pagina tra la main e la play che
         return cbx;
     }
 
+    // Crea un bottone stilizzato con colori e font del tema
     private JButton creaBottone(String testo) {
         JButton btn = new JButton(testo);
         btn.setBackground(ACCENT_RED);

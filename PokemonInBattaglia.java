@@ -1,3 +1,14 @@
+/*
+                        --- Progetto Java Swing --- 
+                              POKEMON MANAGER
+                  Autori: Sacchi Emanuele, Angelo Gurraj
+                  Classe: 4G
+                  Mese e Anno: Maggio 2026
+
+*/
+
+// Rappresenta un pokemon durante la battaglia
+// con le statistiche calcolate e lo stato attuale (hp, status, ecc.)
 public class PokemonInBattaglia {
     Pokemon pokemon;
     int hpAttuali;
@@ -22,23 +33,28 @@ public class PokemonInBattaglia {
         this.speed     = calcolaStat(p.bst.bstSpeed,  p.iv.ivSpeed,  p.ev.evSpeed,  p.natura.speedMod,  p.livello);
     }
 
+    // Calcola gli HP massimi con la formula ufficiale: ((2*base + iv + ev/4) * livello / 100) + livello + 10
     private int calcolaHp(Pokemon p) {
         return (int)((2 * p.bst.bstHp + p.iv.ivHp + p.ev.evHp / 4.0)
                * p.livello / 100.0) + p.livello + 10;
     }
 
+    // Calcola una statistica con la formula ufficiale: ((2*base + iv + ev/4) * livello / 100 + 5) * natura
     private int calcolaStat(int base, double iv, double ev, double natura, int livello) {
         return (int)(((2 * base + iv + ev / 4.0) * livello / 100.0 + 5) * natura);
     }
 
+    // Restituisce true se il pokemon è esaurito (hp a 0)
     boolean isKo() {
         return hpAttuali <= 0;
     }
 
+    // Sottrae il danno ricevuto dagli hp attuali, senza scendere sotto 0
     void subisciDanno(int danno) {
         hpAttuali = Math.max(0, hpAttuali - danno);
     }
 
+    // Restituisce una stringa con gli hp attuali e massimi (es. "245/310 HP")
     String getHpString() {
         return hpAttuali + "/" + hpMax + " HP";
     }
