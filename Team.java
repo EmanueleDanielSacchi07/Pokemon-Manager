@@ -1,31 +1,18 @@
-/*
-                        --- Progetto Java Swing --- 
-                              POKEMON MANAGER
-                  Autori: Sacchi Emanuele, Angelomaria Gurraj
-                  Classe: 4G - Gruppo 10
-                  Mese e Anno: Maggio 2026
+import java.util.ArrayList;
 
-*/
-public class Team { // Classe che definisce un singolo team
-    Pokemon []pokemons;
-    String nome;
-    int countPokemon = 0;
+public class Team {
+    public int id;          // id nel database
+    public String nome;
+    public ArrayList<Pokemon> pokemons = new ArrayList<>();
 
-    Team() {
-        pokemons = new Pokemon[6];
-    }
-
-    Team(String nome) {
-        pokemons = new Pokemon[6];
+    public Team(int id, String nome) {
+        this.id   = id;
         this.nome = nome;
     }
 
-    boolean newPokemon(Pokemon p) {
-        if(countPokemon >= 6) {
-            return false;
-        }
-        pokemons[countPokemon] = p;
+    public boolean aggiungiPokemon(Pokemon p) {
+        if (pokemons.size() >= 6) return false;
+        pokemons.add(p);
         return true;
     }
-
 }

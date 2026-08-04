@@ -7,15 +7,19 @@
 
 */
 import java.awt.*;
+import java.sql.*;
+import java.util.*;
 import javax.swing.*;
 
 public class SelectTeamPage extends JPanel {
     JComboBox<String> cbxTeam1, cbxTeam2;
     JButton btnPlay, btnIndietro;
     JPanel pnlMid, pnlCenter;
-    Teams teams;
     MainController controller;
     Image sfondo;
+
+    // Lista team caricati dal database
+    ArrayList<Team> teams = new ArrayList<>();
 
     static Color ACCENT_RED    = new Color(220, 50, 50);
     static Color ACCENT_YELLOW = new Color(255, 220, 50);
@@ -34,23 +38,15 @@ public class SelectTeamPage extends JPanel {
         lblTitolo.setForeground(ACCENT_YELLOW);
         lblTitolo.setHorizontalAlignment(SwingConstants.CENTER);
 
-        // --- Caricamento team ---
-        teams = new Teams();
-        Mosse mosseList = new Mosse();
-        mosseList.readFromMosseFile();
-        for (int i = 0; i < 6; i++) {
-            teams.readPokemonFromFile(i, mosseList);
-        }
-
         // --- ComboBox ---
-        cbxTeam1 = creaCbx(teams);
-        cbxTeam2 = creaCbx(teams);
+        cbxTeam1 = creaCbx();
+        cbxTeam2 = creaCbx();
 
         // --- Bottoni ---
         btnIndietro = creaBottone("Indietro");
         btnPlay     = creaBottone("Gioca");
         btnIndietro.addActionListener(new PageSwitchListener(controller, "main"));
-        btnPlay.addActionListener(new PlayListener(controller, cbxTeam1, cbxTeam2, teams));
+        btnPlay.addActionListener(e -> avviaBattaglia());
 
         // Pannello centrale con i due bottoni, sfondo semitrasparente arrotondato
         pnlMid = new JPanel(new GridLayout(2, 1, 5, 5)) {
@@ -66,7 +62,7 @@ public class SelectTeamPage extends JPanel {
         pnlMid.add(btnIndietro);
         pnlMid.add(btnPlay);
 
-        // Pannello contenitore delle combobox e del pannello bottoni, completamente trasparente
+        // Pannello contenitore delle combobox e del pannello bottoni
         pnlCenter = new JPanel(new GridLayout(1, 3, 20, 20)) {
             @Override
             protected void paintComponent(Graphics g) {
@@ -90,7 +86,7 @@ public class SelectTeamPage extends JPanel {
         gbc.gridy = 1;
         this.add(pnlCenter, gbc);
 
-        // Ricarica i team dal file ogni volta che la pagina viene mostrata
+        // Ricarica i team dal database ogni volta che la pagina viene mostrata
         addComponentListener(new java.awt.event.ComponentAdapter() {
             @Override
             public void componentShown(java.awt.event.ComponentEvent e) {
@@ -110,37 +106,120 @@ public class SelectTeamPage extends JPanel {
         }
     }
 
-    // Rilegge i file CSV dei team, aggiorna le combobox e ricrea il listener del bottone play
-    // Cosi che quando l'utente aggiunge un nuovo pokemon la page se ne accorge
+    // Rilegge i team dal database (con i relativi pokemon) e aggiorna le combobox
     private void ricaricaTeams() {
-        Mosse mosseList = new Mosse();
-        mosseList.readFromMosseFile();
-        teams = new Teams();
-        for (int i = 0; i < 6; i++) {
-            teams.readPokemonFromFile(i, mosseList);
-        }
+        teams.clear();
         cbxTeam1.removeAllItems();
         cbxTeam2.removeAllItems();
-        for (int i = 0; i < 6; i++) {
-            cbxTeam1.addItem(teams.teams[i].nome);
-            cbxTeam2.addItem(teams.teams[i].nome);
+
+        try {
+            Database db = controller.getDatabase();
+            ResultSet rs = db.getAllTeams();
+            while (rs != null && rs.next()) {
+                int id      = rs.getInt("id");
+                String nome = rs.getString("nome");
+                Team team   = new Team(id, nome);
+
+                // Carica i pokemon del team dal database
+                ResultSet rsPokemon = db.getPokemonDelTeam(id);
+                while (rsPokemon != null && rsPokemon.next()) {
+                    int pokemonSlotId = rsPokemon.getInt("id");
+                    int pokemonId     = rsPokemon.getInt("pokemon_id");
+                    String soprannome = rsPokemon.getString("soprannome");
+                    int livello       = rsPokemon.getInt("livello");
+                    String natura     = rsPokemon.getString("natura");
+
+                    // Carica i dati del pokemon dalla cache PokeAPI
+                    Pokemon p = trovaPokemonDaCache(pokemonId);
+                    if (p != null) {
+                        p.nomePersonale = soprannome;
+                        p.livello       = livello;
+                        p.natura        = natura;
+
+                        // Carica IV e EV
+                        p.iv = new HashMap<>();
+                        p.ev = new HashMap<>();
+                        p.iv.put("hp",               rsPokemon.getInt("iv_hp"));
+                        p.iv.put("attack",           rsPokemon.getInt("iv_atk"));
+                        p.iv.put("defense",          rsPokemon.getInt("iv_def"));
+                        p.iv.put("special-attack",   rsPokemon.getInt("iv_spatk"));
+                        p.iv.put("special-defense",  rsPokemon.getInt("iv_spdef"));
+                        p.iv.put("speed",            rsPokemon.getInt("iv_speed"));
+                        p.ev.put("hp",               rsPokemon.getInt("ev_hp"));
+                        p.ev.put("attack",           rsPokemon.getInt("ev_atk"));
+                        p.ev.put("defense",          rsPokemon.getInt("ev_def"));
+                        p.ev.put("special-attack",   rsPokemon.getInt("ev_spatk"));
+                        p.ev.put("special-defense",  rsPokemon.getInt("ev_spdef"));
+                        p.ev.put("speed",            rsPokemon.getInt("ev_speed"));
+
+                        // Carica le mosse
+                        p.mosse = new ArrayList<>();
+                        ResultSet rsMosse = db.getMosseDelPokemon(pokemonSlotId);
+                        while (rsMosse != null && rsMosse.next()) {
+                            int mossaId = rsMosse.getInt("mossa_id");
+                            PokeApiClient.MossaData md = PokeApiClient.getMossa(String.valueOf(mossaId), db);
+                            if (md != null) p.mosse.add(new Mossa(md));
+                        }
+
+                        team.aggiungiPokemon(p);
+                    }
+                }
+
+                teams.add(team);
+                cbxTeam1.addItem(nome);
+                cbxTeam2.addItem(nome);
+            }
+        } catch (SQLException e) {
+            System.out.println("Errore ricaricaTeams: " + e.getMessage());
         }
-        // Rimuove il vecchio listener e ne aggiunge uno aggiornato con i nuovi team
-        for (var l : btnPlay.getActionListeners()) {
-            btnPlay.removeActionListener(l);
+
+        // Se non ci sono team mostra messaggio
+        if (teams.isEmpty()) {
+            cbxTeam1.addItem("Nessun team");
+            cbxTeam2.addItem("Nessun team");
         }
-        btnPlay.addActionListener(new PlayListener(controller, cbxTeam1, cbxTeam2, teams));
     }
 
-    // Crea una JComboBox stilizzata popolata con i nomi dei team
-    private JComboBox<String> creaCbx(Teams teams) {
+    // Cerca un pokemon nella cache di PokeApiClient per id
+    private Pokemon trovaPokemonDaCache(int id) {
+        for (PokeApiClient.PokemonData data : PokeApiClient.tuttiIPokemon) {
+            if (data.id == id) return new Pokemon(data);
+        }
+        return null;
+    }
+
+    // Avvia la battaglia con i due team selezionati
+    private void avviaBattaglia() {
+        if (teams.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Non ci sono team disponibili!");
+            return;
+        }
+
+        int idx1 = cbxTeam1.getSelectedIndex();
+        int idx2 = cbxTeam2.getSelectedIndex();
+
+        if (idx1 < 0 || idx2 < 0 || idx1 >= teams.size() || idx2 >= teams.size()) {
+            JOptionPane.showMessageDialog(this, "Seleziona due team validi!");
+            return;
+        }
+
+        Team t1 = teams.get(idx1);
+        Team t2 = teams.get(idx2);
+
+        if (t1.pokemons.isEmpty() || t2.pokemons.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Entrambi i team devono avere almeno un pokemon!");
+            return;
+        }
+
+        controller.showPlayPage(t1, t2);
+    }
+
+    // Crea una JComboBox stilizzata
+    private JComboBox<String> creaCbx() {
         JComboBox<String> cbx = new JComboBox<>();
         cbx.setBackground(new Color(60, 60, 80));
         cbx.setForeground(TEXT_WHITE);
         cbx.setFont(new Font("Arial", Font.PLAIN, 14));
-        for (int i = 0; i < teams.teams.length; i++) {
-            cbx.addItem(teams.teams[i].nome);
-        }
         return cbx;
     }
 

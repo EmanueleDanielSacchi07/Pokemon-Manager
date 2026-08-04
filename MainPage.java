@@ -11,7 +11,7 @@ import java.awt.*;
 
 public class MainPage extends JPanel { // Pagina main (La prima mostrata)
 
-    JButton btnPlay, btnTeambuilder, btnShowteam, btnCredit;
+    JButton btnPlay, btnTeambuilder, btnShowteam, btnCredit, btnImpostazioni;
     JLabel lblTitolo, lblLogo;
     Image sfondo;
 
@@ -20,7 +20,31 @@ public class MainPage extends JPanel { // Pagina main (La prima mostrata)
         // Carica sfondo
         sfondo = new ImageIcon("resouces/sfondo.png").getImage();
 
-        this.setLayout(new GridBagLayout());
+        this.setLayout(new BorderLayout());
+
+        // --- PANNELLO SUPERIORE (ingranaggio impostazioni) ---
+        JPanel pnlTop = new JPanel(new FlowLayout(FlowLayout.RIGHT, 15, 15));
+        pnlTop.setOpaque(false);
+
+        ImageIcon iconaIngranaggio = new ImageIcon("resouces/ingranaggio.png");
+        Image ingranaggioScaled = iconaIngranaggio.getImage().getScaledInstance(32, 32, Image.SCALE_SMOOTH);
+
+        btnImpostazioni = new JButton(new ImageIcon(ingranaggioScaled));
+        btnImpostazioni.setBorderPainted(false);
+        btnImpostazioni.setContentAreaFilled(false); // sfondo del bottone trasparente
+        btnImpostazioni.setFocusPainted(false);
+        btnImpostazioni.setOpaque(false);
+        btnImpostazioni.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        btnImpostazioni.setToolTipText("Impostazioni");
+        btnImpostazioni.addActionListener(new PageSwitchListener(controller, "settings"));
+        pnlTop.add(btnImpostazioni);
+
+        this.add(pnlTop, BorderLayout.NORTH);
+
+        // --- PANNELLO CENTRALE (logo, titolo, pulsanti) ---
+        JPanel pnlContenuto = new JPanel(new GridBagLayout());
+        pnlContenuto.setOpaque(false);
+        this.add(pnlContenuto, BorderLayout.CENTER);
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(15, 15, 15, 15);
@@ -36,7 +60,7 @@ public class MainPage extends JPanel { // Pagina main (La prima mostrata)
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.gridwidth = 2;
-        this.add(lblLogo, gbc);
+        pnlContenuto.add(lblLogo, gbc);
 
         // --- TITOLO ---
         lblTitolo = new JLabel("Pokemon Manager");
@@ -44,7 +68,7 @@ public class MainPage extends JPanel { // Pagina main (La prima mostrata)
         lblTitolo.setForeground(new Color(255, 220, 50));
 
         gbc.gridy = 1;
-        this.add(lblTitolo, gbc);
+        pnlContenuto.add(lblTitolo, gbc);
 
         // --- PULSANTI ---
         Dimension buttonSize = new Dimension(200, 50);
@@ -56,21 +80,42 @@ public class MainPage extends JPanel { // Pagina main (La prima mostrata)
         gbc.gridwidth = 1;
 
         gbc.gridx = 0; gbc.gridy = 2;
-        this.add(btnPlay, gbc);
+        pnlContenuto.add(btnPlay, gbc);
 
         gbc.gridx = 1; gbc.gridy = 2;
-        this.add(btnTeambuilder, gbc);
+        pnlContenuto.add(btnTeambuilder, gbc);
 
         gbc.gridx = 0; gbc.gridy = 3;
-        this.add(btnShowteam, gbc);
+        pnlContenuto.add(btnShowteam, gbc);
 
         gbc.gridx = 1; gbc.gridy = 3;
-        this.add(btnCredit, gbc);
+        pnlContenuto.add(btnCredit, gbc);
 
         // Aggiunta dell'action listener per lo switch della pagina qunado premuto il pulsante
-        btnPlay.addActionListener(new PageSwitchListener(controller, "select"));
-        btnTeambuilder.addActionListener(new PageSwitchListener(controller, "team"));
-        btnShowteam.addActionListener(new PageSwitchListener(controller, "showteam"));
+        btnPlay.addActionListener(e -> {
+            if (PokeApiClient.caricamentoCompletato) {
+                controller.showPage("select");
+            } else {
+                controller.avviaCaricamentoPokemon("select");
+            }
+        });
+
+        btnTeambuilder.addActionListener(e -> {
+            if (PokeApiClient.caricamentoCompletato) {
+                controller.showPage("team");
+            } else {
+                controller.avviaCaricamentoPokemon("team");
+            }
+        });
+
+        btnShowteam.addActionListener(e -> {
+            if (PokeApiClient.caricamentoCompletato) {
+                controller.showPage("showteam");
+            } else {
+                controller.avviaCaricamentoPokemon("showteam");
+            }
+        });
+
         btnCredit.addActionListener(new PageSwitchListener(controller, "credit"));
     }
 

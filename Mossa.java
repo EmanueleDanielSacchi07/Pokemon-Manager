@@ -8,30 +8,42 @@
 */
 public class Mossa {
 
-    String nome;
-    int basePow;   // Potenza base
-    int pp;        // Numero di utilizzi 
-    int precisione; // 0–100
-    Tipo tipo;     // Tipo della mossa
-    String categoria; // "fisica", "speciale", "status"
-    // + efffetti + priority (cose che si possono aggiungere in una successiva versione)
+    public int id;
+    public String nome;
+    public int pp;
+    public int potenza;
+    public int precisione;
+    public String tipo;
+    public String categoria; // "physical", "special", "status"
+    public String descrizione;
 
-    public Mossa(String nome, int basePow, int pp, int precisione, Tipo tipo, String categoria) {
-        this.nome = nome;
-        this.basePow = basePow;
-        this.pp = pp;
-        this.precisione = precisione;
-        this.tipo = tipo;
-        this.categoria = categoria.toLowerCase();
+    // Costruttore da MossaData della PokeAPI
+    public Mossa(PokeApiClient.MossaData data) {
+        this.id          = data.id;
+        this.nome        = data.nome;
+        this.pp          = data.pp;
+        this.potenza     = data.potenza;
+        this.precisione  = data.precisione;
+        this.tipo        = data.tipo;
+        this.categoria   = data.categoria;
+        this.descrizione = data.descrizione;
     }
 
-    // Riduzione PP (numero utilizzi della mossa)
-    public void usaMossa() {
-        if (pp > 0) pp--;
+    // Costruttore manuale — usato quando si carica dal database
+    public Mossa(int id, String nome, int pp, int potenza, int precisione,
+                 String tipo, String categoria, String descrizione) {
+        this.id          = id;
+        this.nome        = nome;
+        this.pp          = pp;
+        this.potenza     = potenza;
+        this.precisione  = precisione;
+        this.tipo        = tipo;
+        this.categoria   = categoria;
+        this.descrizione = descrizione;
     }
 
     @Override
     public String toString() {
-        return nome + " [" + tipo.getNome() + ", " + categoria + ", Pow: " + basePow + ", PP: " + pp + "]";
+        return nome + " [" + tipo + ", " + categoria + ", Pow: " + potenza + ", PP: " + pp + "]";
     }
 }

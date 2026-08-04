@@ -52,8 +52,8 @@ public class PlayPage extends JPanel { // Pagina per il game
         squadraT1 = new PokemonInBattaglia[6];
         squadraT2 = new PokemonInBattaglia[6];
         for (int i = 0; i < 6; i++) {
-            if (t1.pokemons[i] != null) squadraT1[i] = new PokemonInBattaglia(t1.pokemons[i]);
-            if (t2.pokemons[i] != null) squadraT2[i] = new PokemonInBattaglia(t2.pokemons[i]);
+            if (i < t1.pokemons.size()) squadraT1[i] = new PokemonInBattaglia(t1.pokemons.get(i));
+            if (i < t2.pokemons.size()) squadraT2[i] = new PokemonInBattaglia(t2.pokemons.get(i));
         }
 
         // ===== PANEL SINISTRO =====
@@ -339,12 +339,19 @@ public class PlayPage extends JPanel { // Pagina per il game
         lblHpT2.setText(squadraT2[activePokemonT2].getHpString());
     }
 
-    // Carica e scala l'immagine del pokemon nella label passata
+    // Carica e scala l'immagine del pokemon dalla URL della PokeAPI
     private void aggiornaImmagine(JLabel lbl, PokemonInBattaglia pk) {
         if (pk != null) {
-            ImageIcon icon = new ImageIcon(pk.pokemon.immagine);
-            Image scaled = icon.getImage().getScaledInstance(150, 150, Image.SCALE_SMOOTH);
-            lbl.setIcon(new ImageIcon(scaled));
+            new Thread(() -> {
+                try {
+                    java.net.URL url = java.net.URI.create(pk.pokemon.spriteUrl).toURL();
+                    ImageIcon icon = new ImageIcon(url);
+                    Image scaled = icon.getImage().getScaledInstance(150, 150, Image.SCALE_SMOOTH);
+                    SwingUtilities.invokeLater(() -> lbl.setIcon(new ImageIcon(scaled)));
+                } catch (Exception e) {
+                    System.out.println("Errore immagine: " + e.getMessage());
+                }
+            }).start();
         }
     }
 

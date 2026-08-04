@@ -1,20 +1,12 @@
-/*
-                        --- Progetto Java Swing --- 
-                              POKEMON MANAGER
-                  Autori: Sacchi Emanuele, Angelomaria Gurraj
-                  Classe: 4G - Gruppo 10
-                  Mese e Anno: Maggio 2026
-
-*/
-public class Tipo {     // Ogni Pokemon ha uno o due tipi (erba, fuoco, acciaio, ecc..)
-    private String nome; // Nome del singolo tipo
+public class Tipo {
+    private final String nome;
 
     public Tipo(String nome) {
         this.nome = nome;
     }
 
-    public String getNome() {
-        return nome;
-    }
-}
+    public String getNome() { return nome; }
 
+    @Override
+    public String toString() { return nome; }
+}

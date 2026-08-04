@@ -7,10 +7,17 @@
 
 */
 import java.awt.*;
+import java.sql.*;
+import java.util.*;
+import java.util.List;
+
 import javax.swing.border.*;
 import javax.swing.*;
 
 public class TeamBuilderPage extends JPanel {
+
+    MainController controller;
+
     JComboBox<String> cbxSelezPokemon;
     JTextField txtNome, txtIVhp, txtIVatk, txtIVspatk, txtIVdef, txtIVspdef, txtIVspeed;
     JTextField txtEVhp, txtEVatk, txtEVspatk, txtEVdef, txtEVspdef, txtEVspeed;
@@ -18,21 +25,21 @@ public class TeamBuilderPage extends JPanel {
     JComboBox<String> cbxMossa1, cbxMossa2, cbxMossa3, cbxMossa4;
     JComboBox<String> cbxNatura;
 
+    JComboBox<String> cbxTeamSelezionato;
+    JButton btnNuovoTeam;
+
     JButton btnAggiungi, btnIndietro;
 
     JPanel pnl1, pnl2, pnl3, pnl4, pnl5;
 
-    JRadioButton[] slotsTeam;
-    ButtonGroup grpTeam;
-
     JLabel lblPokemon;
-
-    Pokedex pkDex;
-    Mosse mosseList;
-    NatureList natureList;
-    Teams teams;
-
     Image sfondo;
+
+    // Pokemon attualmente selezionato dalla combobox
+    PokeApiClient.PokemonData pokemonSelezionato;
+
+    // Lista team dal database
+    ArrayList<Team> teams = new ArrayList<>();
 
     static Color BG_PANEL      = new Color(45, 45, 60, 200);
     static Color BG_FIELD      = new Color(60, 60, 80);
@@ -43,6 +50,7 @@ public class TeamBuilderPage extends JPanel {
     static Color TEXT_DIM      = new Color(180, 180, 200);
 
     TeamBuilderPage(MainController controller) {
+        this.controller = controller;
         this.setLayout(new GridLayout(5, 1, 0, 4));
         this.setOpaque(false);
         this.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
@@ -54,20 +62,12 @@ public class TeamBuilderPage extends JPanel {
         pnl4 = creaPanel(new GridLayout(1, 4, 6, 6));
         pnl5 = creaPanel(new GridLayout(1, 8, 6, 6));
 
-        // il metodo aggiungiTitolo crea un titledBorder al panel 
-        aggiungiTitolo(pnl2, "EV"); 
+        aggiungiTitolo(pnl2, "EV");
         aggiungiTitolo(pnl3, "IV");
         aggiungiTitolo(pnl4, "MOSSE");
         aggiungiTitolo(pnl5, "TEAM / NATURA");
 
-        // Classi del progetto e letture dal file csv
-        pkDex = new Pokedex();
-        pkDex.readFromPokedexFile();
-        mosseList = new Mosse();
-        mosseList.readFromMosseFile();
-        natureList = new NatureList();
-        teams = new Teams();
-
+        // ---PANEL 1---
         lblPokemon = new JLabel();
         lblPokemon.setPreferredSize(new Dimension(120, 120));
         lblPokemon.setHorizontalAlignment(SwingConstants.CENTER);
@@ -76,12 +76,15 @@ public class TeamBuilderPage extends JPanel {
 
         JPanel pnlCentro = creaPanel(new GridLayout(1, 2, 8, 8));
 
+        // Popola la combobox con i pokemon dalla cache PokeAPI
         cbxSelezPokemon = new JComboBox<>();
-        for (int i = 0; i < pkDex.kanto.length; i++) {
-            cbxSelezPokemon.addItem(pkDex.kanto[i].nome);
+        for (PokeApiClient.PokemonData pk : PokeApiClient.tuttiIPokemon) {
+            cbxSelezPokemon.addItem(pk.nome);
         }
         stilizzaCbx(cbxSelezPokemon, "Seleziona Pokemon:");
-        cbxSelezPokemon.addActionListener(new PokemonImageListener(pkDex, lblPokemon));
+
+        // Quando cambia il pokemon aggiorna immagine e mosse disponibili
+        cbxSelezPokemon.addActionListener(e -> aggiornaPokemonSelezionato());
         pnlCentro.add(cbxSelezPokemon);
 
         txtNome = creaTxtField("Soprannome:");
@@ -95,8 +98,14 @@ public class TeamBuilderPage extends JPanel {
         pnl1.add(pnlEast, BorderLayout.EAST);
 
         this.add(pnl1);
-        cbxSelezPokemon.setSelectedIndex(0);
 
+        // Seleziona il primo pokemon e aggiorna l'immagine
+        if (!PokeApiClient.tuttiIPokemon.isEmpty()) {
+            cbxSelezPokemon.setSelectedIndex(0);
+            aggiornaPokemonSelezionato();
+        }
+
+        // ---PANEL 2--- (EV)
         txtEVhp    = creaTxtField("HP");
         txtEVatk   = creaTxtField("Atk");
         txtEVspatk = creaTxtField("Sp.Atk");
@@ -118,6 +127,7 @@ public class TeamBuilderPage extends JPanel {
         pnl2.add(txtEVspeed);
         this.add(pnl2);
 
+        // ---PANEL 3--- (IV)
         txtIVhp    = creaIVField("HP");
         txtIVatk   = creaIVField("Atk");
         txtIVspatk = creaIVField("Sp.Atk");
@@ -133,24 +143,21 @@ public class TeamBuilderPage extends JPanel {
         pnl3.add(txtIVspeed);
         this.add(pnl3);
 
+        // ---PANEL 4--- (Mosse)
         cbxMossa1 = new JComboBox<>();
         stilizzaCbx(cbxMossa1, "Mossa 1:");
-        for (Mossa mossa : mosseList.mosse) cbxMossa1.addItem(mossa.nome);
 
         cbxMossa2 = new JComboBox<>();
         cbxMossa2.addItem("Nessuna");
         stilizzaCbx(cbxMossa2, "Mossa 2:");
-        for (Mossa mossa : mosseList.mosse) cbxMossa2.addItem(mossa.nome);
 
         cbxMossa3 = new JComboBox<>();
         cbxMossa3.addItem("Nessuna");
         stilizzaCbx(cbxMossa3, "Mossa 3:");
-        for (Mossa mossa : mosseList.mosse) cbxMossa3.addItem(mossa.nome);
 
         cbxMossa4 = new JComboBox<>();
         cbxMossa4.addItem("Nessuna");
         stilizzaCbx(cbxMossa4, "Mossa 4:");
-        for (Mossa mossa : mosseList.mosse) cbxMossa4.addItem(mossa.nome);
 
         pnl4.add(cbxMossa1);
         pnl4.add(cbxMossa2);
@@ -158,31 +165,212 @@ public class TeamBuilderPage extends JPanel {
         pnl4.add(cbxMossa4);
         this.add(pnl4);
 
-        slotsTeam = new JRadioButton[6];
-        grpTeam = new ButtonGroup();
-        for (int i = 0; i < 6; i++) {
-            slotsTeam[i] = new JRadioButton("Team " + (i + 1));
-            slotsTeam[i].setOpaque(false);
-            slotsTeam[i].setForeground(ACCENT_YELLOW);
-            slotsTeam[i].setFont(new Font("Arial", Font.BOLD, 12));
-            grpTeam.add(slotsTeam[i]);
-            pnl5.add(slotsTeam[i]);
-        }
-        slotsTeam[0].setSelected(true);
+        // ---PANEL 5--- (Team + Natura + Aggiungi)
+
+        // Combobox per selezionare il team a cui aggiungere il pokemon
+        cbxTeamSelezionato = new JComboBox<>();
+        stilizzaCbx(cbxTeamSelezionato, "Team:");
+        pnl5.add(cbxTeamSelezionato);
+
+        // Pulsante fisso per creare un nuovo team (sempre visibile, non appare/scompare)
+        btnNuovoTeam = creaBottone("+ Nuovo Team", ACCENT_RED);
+        btnNuovoTeam.addActionListener(e -> creaNuovoTeam());
+        pnl5.add(btnNuovoTeam);
+
+        // Carica i team esistenti dal database nella combobox
+        caricaTeams();
 
         cbxNatura = new JComboBox<>();
         stilizzaCbx(cbxNatura, "Natura:");
-        for (Natura n : natureList.getAll()) cbxNatura.addItem(n.nome);
+        // Carica le nature dalla PokeAPI
+        new Thread(() -> {
+            List<PokeApiClient.NaturaData> nature = PokeApiClient.getListaNature();
+            SwingUtilities.invokeLater(() -> {
+                for (PokeApiClient.NaturaData n : nature) {
+                    cbxNatura.addItem(n.nome);
+                }
+            });
+        }).start();
         pnl5.add(cbxNatura);
 
         btnAggiungi = creaBottone("+ Aggiungi", ACCENT_GREEN);
-        btnAggiungi.addActionListener(new AddPokemonListener(this, teams));
+        btnAggiungi.addActionListener(e -> aggiungiPokemon());
         pnl5.add(btnAggiungi);
 
         this.add(pnl5);
     }
 
-    // Disegna l'immagine di sfondo e un overlay scuro sopra 
+    // Ricarica la combobox dei pokemon (da chiamare dopo che PokeApiClient.tuttiIPokemon è stato popolato)
+    public void aggiornaListaPokemon() {
+        cbxSelezPokemon.removeAllItems();
+        for (PokeApiClient.PokemonData pk : PokeApiClient.tuttiIPokemon) {
+            cbxSelezPokemon.addItem(pk.nome);
+        }
+        if (!PokeApiClient.tuttiIPokemon.isEmpty()) {
+            cbxSelezPokemon.setSelectedIndex(0);
+            aggiornaPokemonSelezionato();
+        }
+    }
+
+    // Aggiorna immagine e mosse disponibili quando si cambia pokemon nella combobox
+    private void aggiornaPokemonSelezionato() {
+        int idx = cbxSelezPokemon.getSelectedIndex();
+        if (idx < 0 || idx >= PokeApiClient.tuttiIPokemon.size()) return;
+
+        pokemonSelezionato = PokeApiClient.tuttiIPokemon.get(idx);
+
+        // Aggiorna immagine
+        new Thread(() -> {
+            try {
+                java.net.URL url = java.net.URI.create(pokemonSelezionato.spriteUrl).toURL();
+                ImageIcon icon = new ImageIcon(url);
+                Image scaled = icon.getImage().getScaledInstance(110, 110, Image.SCALE_SMOOTH);
+                SwingUtilities.invokeLater(() -> lblPokemon.setIcon(new ImageIcon(scaled)));
+            } catch (Exception e) {
+                System.out.println("Errore caricamento sprite: " + e.getMessage());
+            }
+        }).start();
+
+        // Aggiorna mosse disponibili per questo pokemon
+        cbxMossa1.removeAllItems();
+        cbxMossa2.removeAllItems();
+        cbxMossa3.removeAllItems();
+        cbxMossa4.removeAllItems();
+        cbxMossa2.addItem("Nessuna");
+        cbxMossa3.addItem("Nessuna");
+        cbxMossa4.addItem("Nessuna");
+
+        for (String nomeMossa : pokemonSelezionato.nomeMosseDisponibili) {
+            cbxMossa1.addItem(nomeMossa);
+            cbxMossa2.addItem(nomeMossa);
+            cbxMossa3.addItem(nomeMossa);
+            cbxMossa4.addItem(nomeMossa);
+        }
+    }
+
+    // Carica (o ricarica) i team dal database nella combobox di selezione
+    private void caricaTeams() {
+        teams.clear();
+        cbxTeamSelezionato.removeAllItems();
+
+        try {
+            Database db = controller.getDatabase();
+            ResultSet rs = db.getAllTeams();
+            while (rs != null && rs.next()) {
+                int id      = rs.getInt("id");
+                String nome = rs.getString("nome");
+                teams.add(new Team(id, nome));
+                cbxTeamSelezionato.addItem(nome);
+            }
+        } catch (SQLException e) {
+            System.out.println("Errore caricaTeams: " + e.getMessage());
+        }
+
+        if (teams.isEmpty()) {
+            cbxTeamSelezionato.addItem("Nessun team — creane uno");
+        }
+    }
+
+    // Crea un nuovo team nel database chiedendo il nome all'utente, poi lo seleziona
+    private void creaNuovoTeam() {
+        String nome = JOptionPane.showInputDialog(this, "Nome del nuovo team:");
+        if (nome == null || nome.isBlank()) return;
+        try {
+            Database db = controller.getDatabase();
+            db.inserisciTeam(nome);
+            caricaTeams();
+            // Seleziona automaticamente il team appena creato (ultimo della lista)
+            if (!teams.isEmpty()) {
+                cbxTeamSelezionato.setSelectedIndex(teams.size() - 1);
+            }
+        } catch (Exception e) {
+            System.out.println("Errore creaNuovoTeam: " + e.getMessage());
+        }
+    }
+
+    // Legge i campi e aggiunge il pokemon al team selezionato nel database
+    private void aggiungiPokemon() {
+        if (pokemonSelezionato == null) {
+            JOptionPane.showMessageDialog(this, "Seleziona un pokemon!");
+            return;
+        }
+
+        int teamIdx = cbxTeamSelezionato.getSelectedIndex();
+        if (teamIdx < 0 || teamIdx >= teams.size()) {
+            JOptionPane.showMessageDialog(this, "Seleziona o crea un team!");
+            return;
+        }
+
+        Team teamSelezionato = teams.get(teamIdx);
+        String soprannome    = txtNome.getText().trim();
+        String natura        = (String) cbxNatura.getSelectedItem();
+        int livello          = 50;
+
+        try {
+            Database db = controller.getDatabase();
+
+            // Calcola il prossimo slot disponibile
+            ResultSet rs = db.getPokemonDelTeam(teamSelezionato.id);
+            int slot = 0;
+            while (rs != null && rs.next()) slot++;
+
+            if (slot >= 6) {
+                JOptionPane.showMessageDialog(this, "Il team è pieno!");
+                return;
+            }
+
+            // Inserisce il pokemon
+            int pokemonSlotId = db.inserisciPokemon(
+                teamSelezionato.id,
+                pokemonSelezionato.id,
+                soprannome.isBlank() ? null : soprannome,
+                livello, natura, slot
+            );
+
+            // Inserisce IV
+            db.inserisciStats(pokemonSlotId,
+                Integer.parseInt(txtIVhp.getText()),
+                Integer.parseInt(txtIVatk.getText()),
+                Integer.parseInt(txtIVdef.getText()),
+                Integer.parseInt(txtIVspatk.getText()),
+                Integer.parseInt(txtIVspdef.getText()),
+                Integer.parseInt(txtIVspeed.getText()),
+                Integer.parseInt(txtEVhp.getText()),
+                Integer.parseInt(txtEVatk.getText()),
+                Integer.parseInt(txtEVdef.getText()),
+                Integer.parseInt(txtEVspatk.getText()),
+                Integer.parseInt(txtEVspdef.getText()),
+                Integer.parseInt(txtEVspeed.getText())
+            );
+
+            // Inserisce mosse
+            String[] mosseScelte = {
+                (String) cbxMossa1.getSelectedItem(),
+                (String) cbxMossa2.getSelectedItem(),
+                (String) cbxMossa3.getSelectedItem(),
+                (String) cbxMossa4.getSelectedItem()
+            };
+
+            for (int i = 0; i < mosseScelte.length; i++) {
+                if (mosseScelte[i] != null && !mosseScelte[i].equals("Nessuna")) {
+                    // Cerca l'id della mossa dalla lista mosse disponibili del pokemon
+                    int mossaIdx = pokemonSelezionato.nomeMosseDisponibili.indexOf(mosseScelte[i]);
+                    if (mossaIdx >= 0) {
+                        int mossaId = pokemonSelezionato.mosseDisponibili.get(mossaIdx)[0];
+                        db.inserisciMossa(pokemonSlotId, mossaId, i);
+                    }
+                }
+            }
+            JOptionPane.showMessageDialog(this, pokemonSelezionato.nome + " aggiunto al team!");
+            reset();
+
+        } catch (SQLException e) {
+            System.out.println("Errore aggiungiPokemon: " + e.getMessage());
+            JOptionPane.showMessageDialog(this, "Errore durante il salvataggio!");
+        }
+    }
+
+    // Disegna l'immagine di sfondo e un overlay scuro sopra
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -193,7 +381,7 @@ public class TeamBuilderPage extends JPanel {
         }
     }
 
-    // Aggiunge un bordo con titolo colorato al pannello passato 
+    // Aggiunge un bordo con titolo colorato al pannello passato
     private void aggiungiTitolo(JPanel pnl, String testo) {
         pnl.setBorder(BorderFactory.createTitledBorder(
             BorderFactory.createLineBorder(ACCENT_YELLOW, 1),
@@ -203,7 +391,7 @@ public class TeamBuilderPage extends JPanel {
             new Font("Arial", Font.BOLD, 11), ACCENT_YELLOW));
     }
 
-    // Crea un pannello semitrasparente con angoli arrotondati 
+    // Crea un pannello semitrasparente con angoli arrotondati
     private JPanel creaPanel(LayoutManager layout) {
         JPanel p = new JPanel(layout) {
             @Override
@@ -220,7 +408,7 @@ public class TeamBuilderPage extends JPanel {
         return p;
     }
 
-    // Crea un bottone stilizzato con colore e testo personalizzati 
+    // Crea un bottone stilizzato con colore e testo personalizzati
     private JButton creaBottone(String testo, Color colore) {
         JButton btn = new JButton(testo);
         btn.setBackground(colore);
@@ -232,7 +420,7 @@ public class TeamBuilderPage extends JPanel {
         return btn;
     }
 
-    // Crea una JTextField stilizzata con titolo e colori del tema 
+    // Crea una JTextField stilizzata con titolo e colori del tema
     private JTextField creaTxtField(String titolo) {
         JTextField txt = new JTextField();
         txt.setBackground(BG_FIELD);
@@ -251,7 +439,7 @@ public class TeamBuilderPage extends JPanel {
         return txt;
     }
 
-    // Crea una JTextField per gli IV con documento validatore e valore iniziale 31 
+    // Crea una JTextField per gli IV con documento validatore e valore iniziale 31
     private JTextField creaIVField(String titolo) {
         JTextField txt = creaTxtField(titolo);
         txt.setDocument(new IVDocument());
@@ -259,7 +447,7 @@ public class TeamBuilderPage extends JPanel {
         return txt;
     }
 
-    // Applica stile grafico (colori, font, bordo) a una JComboBox 
+    // Applica stile grafico a una JComboBox
     private void stilizzaCbx(JComboBox<String> cbx, String titolo) {
         cbx.setBackground(BG_FIELD);
         cbx.setForeground(TEXT_WHITE);
@@ -274,7 +462,7 @@ public class TeamBuilderPage extends JPanel {
         ));
     }
 
-    // Riporta tutti i campi della pagina ai valori predefiniti 
+    // Riporta tutti i campi della pagina ai valori predefiniti
     public void reset() {
         cbxSelezPokemon.setSelectedIndex(0);
         txtNome.setText("");
@@ -295,6 +483,7 @@ public class TeamBuilderPage extends JPanel {
         cbxMossa3.setSelectedIndex(0);
         cbxMossa4.setSelectedIndex(0);
         cbxNatura.setSelectedIndex(0);
-        slotsTeam[0].setSelected(true);
+        // Il team selezionato resta invariato dopo l'aggiunta, cosi puoi aggiungere
+        // subito un altro pokemon allo stesso team senza doverlo riselezionare
     }
 }

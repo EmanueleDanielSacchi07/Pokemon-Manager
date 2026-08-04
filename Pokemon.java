@@ -8,80 +8,87 @@
 */
 import java.util.*;
 
-public class Pokemon { // Classe che identifica un pokemon
+public class Pokemon {
 
-    // Pokemon
-    String nome;
-    String nomePersonale;
-    ArrayList<Tipo> tipi; // max 2 tipi
-    String immagine;
+    // Dati base
+    public int id;              // id PokeAPI
+    public String nome;
+    public String nomePersonale;
+    public List<String> tipi;
+    public String spriteUrl;    // URL dell'immagine dalla PokeAPI
 
-    // Statistiche
-    int livello;
-    Ev ev; // Effort Values
-    Iv iv; // Individual Values
-    ArrayList<Mossa> mosse; // max 4 mosse
-    BaseStats bst; // Statistiche base 
-    Natura natura;
+    // Statistiche base (dalla PokeAPI)
+    public Map<String, Integer> baseStats;
 
-    public Pokemon(String nome, String nomePersonale, ArrayList<Tipo> tipi, int livello,
-                   Ev ev, Iv iv, ArrayList<Mossa> mosse, BaseStats bst, Natura natura, String immagine) {
+    // Statistiche personalizzate
+    public int livello;
+    public Map<String, Integer> iv; // hp, attack, defense, special-attack, special-defense, speed
+    public Map<String, Integer> ev;
 
-        this.nome = nome;
+    // Mosse e natura
+    public List<Mossa> mosse;
+    public String natura;
+
+    // Abilità
+    public List<String> abilita;
+
+    // Costruttore completo — usato quando si carica dal database
+    public Pokemon(int id, String nome, String nomePersonale, List<String> tipi,
+                   String spriteUrl, Map<String, Integer> baseStats, int livello,
+                   Map<String, Integer> iv, Map<String, Integer> ev,
+                   List<Mossa> mosse, String natura, List<String> abilita) {
+        this.id           = id;
+        this.nome         = nome;
         this.nomePersonale = nomePersonale;
-        this.tipi = tipi;
-        this.livello = livello;
-        this.ev = ev;
-        this.iv = iv;
-        this.mosse = mosse;
-        this.bst = bst;
-        this.natura = natura;
-        this.immagine = immagine;
+        this.tipi         = tipi;
+        this.spriteUrl    = spriteUrl;
+        this.baseStats    = baseStats;
+        this.livello      = livello;
+        this.iv           = iv;
+        this.ev           = ev;
+        this.mosse        = mosse;
+        this.natura       = natura;
+        this.abilita      = abilita;
     }
 
-    public Pokemon(String nome, BaseStats bst, ArrayList<Tipo> tipi, String immagine) {
-        this.nome = nome;
-        this.bst = bst;
-        this.tipi = tipi;
-        this.immagine = immagine;
+    // Costruttore da PokemonData — usato quando si seleziona un pokemon dalla PokeAPI
+    public Pokemon(PokeApiClient.PokemonData data) {
+        this.id        = data.id;
+        this.nome      = data.nome;
+        this.tipi      = data.tipi;
+        this.spriteUrl = data.spriteUrl;
+        this.baseStats = data.stats;
+        this.abilita   = data.abilita;
+        this.livello   = 50;
+        this.mosse     = new ArrayList<>();
+        this.natura    = "hardy";
+
+        // IV e EV di default
+        this.iv = new HashMap<>();
+        this.ev = new HashMap<>();
+        for (String stat : new String[]{"hp", "attack", "defense", "special-attack", "special-defense", "speed"}) {
+            iv.put(stat, 31);
+            ev.put(stat, 0);
+        }
     }
 
-    // Aggiunge un tipo se non sono gia 2
-    public void addTipo(Tipo t) {
-        if (tipi.size() < 2) tipi.add(t);
+    // Restituisce una stat base per nome (es. "attack", "speed")
+    public int getBaseStat(String nome) {
+        return baseStats.getOrDefault(nome, 0);
     }
 
-    // Aggiunge una mossa se non sono gia 4
-    public void addMossa(Mossa m) {
-        if (mosse.size() < 4) mosse.add(m);
+    // Restituisce un IV per nome
+    public int getIv(String nome) {
+        return iv.getOrDefault(nome, 31);
     }
 
-    // To string per il csv di un oggetto pokemon
-    public String toStringCsv() {
-        String strNomePersonale = (nomePersonale != null && !nomePersonale.isBlank()) ? nomePersonale : "null";
-
-        String tipo1 = tipi.size() > 0 ? tipi.get(0).getNome() : "null";
-        String tipo2 = tipi.size() > 1 ? tipi.get(1).getNome() : "null";
-
-        String mossa1 = mosse.size() > 0 && mosse.get(0) != null ? mosse.get(0).nome : "null";
-        String mossa2 = mosse.size() > 1 && mosse.get(1) != null ? mosse.get(1).nome : "null";
-        String mossa3 = mosse.size() > 2 && mosse.get(2) != null ? mosse.get(2).nome : "null";
-        String mossa4 = mosse.size() > 3 && mosse.get(3) != null ? mosse.get(3).nome : "null";
-
-        return nome + ";" +
-            strNomePersonale + ";" +
-            tipo1 + ";" +
-            tipo2 + ";" +
-            livello + ";" +
-            iv.ivHp + ";" + iv.ivAtk + ";" + iv.ivSpaAtk + ";" + iv.ivDef + ";" + iv.ivSpaDef + ";" + iv.ivSpeed + ";" +
-            ev.evHp + ";" + ev.evAtk + ";" + ev.evSpaAtk + ";" + ev.evDef + ";" + ev.evSpaDef + ";" + ev.evSpeed + ";" +
-            mossa1 + ";" +
-            mossa2 + ";" +
-            mossa3 + ";" +
-            mossa4 + ";" +
-            bst.bstHp + ";" + bst.bstAtk + ";" + bst.bstSpaAtk + ";" + bst.bstDef + ";" + bst.bstSpaDef + ";" + bst.bstSpeed + ";" +
-            natura.nome + ";" +
-            immagine;
+    // Restituisce un EV per nome
+    public int getEv(String nome) {
+        return ev.getOrDefault(nome, 0);
     }
-    
+
+    @Override
+    public String toString() {
+        return nome + (nomePersonale != null ? " (" + nomePersonale + ")" : "");
+    }
 }
